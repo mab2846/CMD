@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Modelado Algebraico | Grupo N°28</title>
+  <style>
+    :root {
+      --bg: #0f172a; --card: #1e293b; --border: #334155;
+      --text: #f8fafc; --muted: #94a3b8; --accent: #38bdf8;
+      --success: #10b981; --danger: #f43f5e; --warning: #f59e0b; --purple: #a855f7;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; }
+    header { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .brand h1 { font-size: 1.2rem; color: var(--accent); }
+    .brand p { font-size: 0.85rem; color: var(--muted); }
+    .tabs { display: flex; gap: 0.5rem; }
+    .tab-btn { background: var(--bg); border: 1px solid var(--border); color: var(--muted); padding: 0.6rem 1rem; border-radius: 8px; cursor: pointer; font-weight: bold; }
+    .tab-btn.active { background: var(--accent); color: #0f172a; border-color: var(--accent); }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; }
+    .card h2 { font-size: 1.05rem; color: var(--accent); margin-bottom: 1rem; }
+    input[type="text"] { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 0.75rem; border-radius: 8px; font-size: 1.1rem; font-family: monospace; margin: 0.4rem 0 1rem; }
+    .row { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
+    .t-btn { flex: 1; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); cursor: pointer; text-align: left; }
+    .t-btn.on { border-color: var(--warning); background: rgba(245, 158, 11, 0.15); }
+    .slider-box { background: var(--bg); padding: 0.9rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 1rem; }
+    input[type="range"] { width: 100%; margin-top: 0.5rem; accent-color: var(--accent); }
+    .screen { background: #0b1120; border: 1px dashed var(--border); border-radius: 10px; padding: 1rem; text-align: center; margin-bottom: 1rem; }
+    .out { font-family: monospace; font-size: 1.6rem; color: var(--accent); letter-spacing: 2px; margin: 0.5rem 0; }
+    .dot { color: var(--warning); }
+    .meta { display: flex; justify-content: space-around; font-family: monospace; font-size: 0.95rem; background: rgba(56, 189, 248, 0.1); padding: 0.6rem; border-radius: 6px; }
+    .btn { padding: 0.75rem 1rem; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
+    .btn-ok { background: var(--success); color: #052e16; flex: 1; }
+    .btn-gray { background: var(--border); color: var(--text); }
+    .msg { margin-top: 1rem; padding: 0.9rem; border-radius: 8px; font-size: 0.9rem; display: none; line-height: 1.4; }
+    .msg.ok { display: block; background: rgba(16, 185, 129, 0.15); border: 1px solid var(--success); color: #a7f3d0; }
+    .msg.err { display: block; background: rgba(244, 63, 94, 0.15); border: 1px solid var(--danger); color: #fecdd3; }
+    .box-m { border: 2px solid var(--warning); border-radius: 10px; padding: 1rem; background: rgba(245, 158, 11, 0.05); }
+    .box-g { border: 2px solid var(--success); border-radius: 8px; padding: 0.9rem; background: rgba(16, 185, 129, 0.1); margin-top: 1rem; }
+    ul { margin: 0.75rem 0 0 1.2rem; font-size: 0.9rem; line-height: 1.5; }
+    .sim-btn { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 0.85rem; border-radius: 8px; text-align: left; cursor: pointer; margin-bottom: 0.6rem; }
+    .sim-btn:hover { border-color: var(--accent); }
+    .buckets { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+    .bucket { background: #0b1120; border: 2px solid var(--border); border-radius: 10px; padding: 1rem; min-height: 160px; }
+    .pool { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+    .chip { padding: 0.3rem 0.6rem; border-radius: 5px; font-family: monospace; font-size: 0.85rem; font-weight: bold; }
+    .c-even { background: rgba(168, 85, 247, 0.25); border: 1px solid var(--purple); color: #e9d5ff; }
+    .c-odd { background: rgba(56, 189, 248, 0.25); border: 1px solid var(--accent); color: #bae6fd; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>Complementos de Matemática Discreta — Grupo N°28</h1>
+      <p>Etapa N°3: Limpieza de Formulario Web (Filas 1 a 7)</p>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="go(0)">1. Flujo de Pasos (104)</button>
+      <button class="tab-btn" onclick="go(1)">2. Cíclico ℤ₂₆ y Lagrange</button>
+      <button class="tab-btn" onclick="go(2)">3. Homomorfismo</button>
+      <button class="tab-btn" onclick="go(3)">4. Tabla de Cayley (104×104)</button>
+    </div>
+  </header>
+  <div class="wrap">
+    <div id="p0" class="panel active">
+      <div class="grid">
+        <div class="card">
+          <h2>Simulador de Pasos (Filas 1 a 3)</h2>
+          <label>Texto de entrada (espacios marcados con •):</label>
+          <input type="text" id="txt" value=" Hola " oninput="runPipe()" />
+          <div class="row">
+            <button id="bm" class="t-btn" onclick="togM()"><strong>m (Minúsculas)</strong><br><small>m² = m (a = <span id="va">0</span>)</small></button>
+            <button id="bq" class="t-btn" onclick="togQ()"><strong>q (Quitar espacios)</strong><br><small>q² = q (b = <span id="vb">0</span>)</small></button>
+          </div>
+          <div class="slider-box">
+            <div><strong>cᵏ (Desplazamiento A→Z):</strong> k = <strong id="vk" style="color:var(--accent)">0</strong> (c²⁶ = id)</div>
+            <input type="range" id="sk" min="0" max="25" value="0" oninput="runPipe()" />
+          </div>
+          <div class="screen">
+            <small style="color:var(--muted)">RESULTADO</small>
+            <div id="out" class="out">•Hola•</div>
+            <div class="meta">
+              <span>Forma: <strong id="nf" style="color:var(--warning)">id</strong></span>
+              <span>Paso #<strong id="idx">1</strong> de 104</span>
+            </div>
+          </div>
+          <div class="row">
+            <button class="btn btn-ok" onclick="undo()">↺ Intentar Deshacer (Inverso)</button>
+            <button class="btn btn-gray" onclick="rst()">Reset</button>
+          </div>
+          <div id="msg0" class="msg"></div>
+        </div>
+
+        <div class="card">
+          <h2>Estructura Elegida (Filas 4 a 6)</h2>
+          <div class="box-m">
+            <strong style="color:var(--warning); font-size:1.05rem;">Monoide Conmutativo (104 elementos)</strong>
+            <p style="font-size:0.85rem; color:var(--muted); margin-top:0.3rem;">2 (m) × 2 (q) × 26 (c) = 104 combinaciones únicas</p>
+            <ul>
+              <li><b>Clausura y Asociatividad:</b> Componer pasos da otro paso válido.</li>
+              <li><b>Neutro:</b> <code>id</code> deja el texto intacto.</li>
+              <li><b>Conmutatividad:</b> <code>c(m(" Hola ")) = " ipmb " = m(c(" Hola "))</code>.</li>
+              <li><b>Descartado ℤ₂×ℤ₂×ℤ₂₆:</b> Ahí m² = id, pero aquí m² = m.</li>
+            </ul>
+            <div class="box-g">
+              <strong style="color:var(--success);">Subgrupo Reversible ⟨c⟩ ≅ ℤ₂₆ (26 pasos)</strong>
+              <p style="font-size:0.85rem; margin-top:0.3rem;">Solo los desplazamientos <b>cᵏ</b> tienen inverso <b>c²⁶⁻ᵏ</b>. Como <code>m</code> y <code>q</code> pierden datos, no es grupo.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="p1" class="panel">
+      <div class="grid">
+        <div class="card" style="display:flex; justify-content:center; align-items:center; background:#0b1120;">
+          <svg id="clk" width="380" height="380" viewBox="0 0 380 380"></svg>
+        </div>
+        <div class="card">
+          <h2>Órdenes, Generadores y Lagrange (Fila 7)</h2>
+          <button class="sim-btn" onclick="anim(1)"><strong style="color:var(--accent)">1. Orden de c: |c| = 26 (Generador)</strong><br><small>Recorre los 26 pasos. Hay φ(26) = 12 generadores.</small></button>
+          <button class="sim-btn" onclick="anim(13)"><strong style="color:var(--accent)">2. Orden de c¹³: |c¹³| = 2 (ROT13)</strong><br><small>Salta medio alfabeto ida y vuelta en 2 pasos.</small></button>
+          <button class="sim-btn" onclick="anim(2)"><strong style="color:var(--accent)">3. Subgrupo ⟨c²⟩: Orden 13</strong><br><small>Visita solo los 13 desplazamientos pares.</small></button>
+          <button class="sim-btn" style="border-color:var(--danger)" onclick="lagFail()"><strong style="color:var(--danger)">4. ¿Subgrupo de 4 desplazamientos? (Lagrange)</strong><br><small>Divisores de 26: 1, 2, 13, 26. Como 4 ∤ 26, es imposible.</small></button>
+          <div id="msg1" class="msg ok">Elige un botón para animar el ciclo en ℤ₂₆.</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="p2" class="panel">
+      <div class="card">
+        <h2>Homomorfismo de Paridad: p(cᵏ) = clase de k en ℤ₂</h2>
+        <p style="font-size:0.9rem; color:var(--muted); margin-bottom:1rem;">Bien definido porque <b>2 | 26</b> (en ℤ₄ fallaría porque 4 ∤ 26).</p>
+        <button class="btn" style="background:var(--accent); color:#0f172a;" onclick="runHomo()">▶ Ejecutar Homomorfismo</button>
+        <button class="btn btn-gray" onclick="rstHomo()">Reiniciar</button>
+        <div id="pool" class="pool"></div>
+        <div class="buckets">
+          <div class="bucket" style="border-color:var(--purple)"><strong style="color:var(--purple)">Par — Núcleo ker(p) (13 elementos)</strong><div id="bEven" class="pool"></div></div>
+          <div class="bucket" style="border-color:var(--accent)"><strong style="color:var(--accent)">Impar — Imagen Im(p) = ℤ₂ (13 elementos)</strong><div id="bOdd" class="pool"></div></div>
+        </div>
+        <div id="msg2" class="msg"></div>
+      </div>
+    </div>
+    <div id="p3" class="panel">
+      <div class="card">
+        <h2>Laboratorio Visual: Propiedades en la Tabla de Cayley</h2>
+        <p style="font-size:0.9rem; color:var(--muted); margin-bottom:1rem;">
+          Pulsa cada propiedad para animar paso a paso cómo se detecta en la tabla (sobre 8 elementos representativos) o despliega la matriz completa de <b>104×104</b>:
+        </p>
+        <div class="row" style="flex-wrap:wrap; gap:0.5rem;">
+          <button class="btn" style="background:var(--accent); color:#0f172a;" onclick="animProp('interna')">1. Es Interna (Clausura)</button>
+          <button class="btn" style="background:#8b5cf6; color:#fff;" onclick="animProp('conmutativa')">2. Conmutativa (Espejo)</button>
+          <button class="btn" style="background:var(--success); color:#052e16;" onclick="animProp('neutro')">3. Neutro (id)</button>
+          <button class="btn" style="background:#ec4899; color:#fff;" onclick="animProp('absorbente')">4. Absorbente (No hay)</button>
+          <button class="btn" style="background:var(--warning); color:#0f172a;" onclick="animProp('idempotente')">5. Idempotentes (Diagonal)</button>
+          <button class="btn" style="background:#f43f5e; color:#fff;" onclick="animProp('inverso')">6. Inversos (Falla m y q)</button>
+          <button class="btn btn-gray" onclick="renderFull104()">Ver Matriz 104×104</button>
+        </div>
+        <div id="cayleyWrap" style="max-height:400px; overflow:auto; border:1px solid var(--border); border-radius:8px; margin-top:1rem; background:#0b1120; padding:0.75rem;"></div>
+        <div id="msg3" class="msg ok" style="margin-top:1rem;">
+          Selecciona una propiedad arriba para ver su animación paso a paso sobre la tabla.
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    var m = 0, q = 0, tmr = null;
+
+    function go(n) {
+      var ps = document.querySelectorAll('.panel');
+      var bs = document.querySelectorAll('.tab-btn');
+      for (var i = 0; i < ps.length; i++) {
+        ps[i].classList.toggle('active', i === n);
+        bs[i].classList.toggle('active', i === n);
+      }
+    }
+
+    function togM() {
+      m = m ? 0 : 1;
+      document.getElementById('bm').classList.toggle('on', m === 1);
+      document.getElementById('va').textContent = m;
+      runPipe();
+    }
+
+    function togQ() {
+      q = q ? 0 : 1;
+      document.getElementById('bq').classList.toggle('on', q === 1);
+      document.getElementById('vb').textContent = q;
+      runPipe();
+    }
+
+    function shift(s, k) {
+      return s.split('').map(function(c) {
+        var x = c.charCodeAt(0);
+        if (x >= 65 && x <= 90) return String.fromCharCode(((x - 65 + k) % 26) + 65);
+        if (x >= 97 && x <= 122) return String.fromCharCode(((x - 97 + k) % 26) + 97);
+        return c;
+      }).join('');
+    }
+
+    function runPipe() {
+      var s = document.getElementById('txt').value;
+      var k = parseInt(document.getElementById('sk').value, 10);
+      document.getElementById('vk').textContent = k;
+      if (m) s = s.toLowerCase();
+      if (q) s = s.trim();
+      if (k > 0) s = shift(s, k);
+      document.getElementById('out').innerHTML = s.length ? s.replace(/ /g, '<span class="dot">•</span>') : '(vacío)';
+      var f = new Array();
+      if (m) f.push('m');
+      if (q) f.push('q');
+      if (k > 0) f.push(k === 1 ? 'c' : 'c^' + k);
+      document.getElementById('nf').textContent = f.length ? f.join(' ∘ ') : 'id';
+      document.getElementById('idx').textContent = (m * 52) + (q * 26) + k + 1;
+      document.getElementById('msg0').className = 'msg';
+    }
+
+    function undo() {
+      var k = parseInt(document.getElementById('sk').value, 10);
+      var el = document.getElementById('msg0');
+      if (!m && !q) {
+        el.className = 'msg ok';
+        el.innerHTML = k === 0
+          ? '✅ <b>Neutro (id):</b> Su inverso es él mismo (id).'
+          : '✅ <b>Reversible:</b> El inverso de <b>c^' + k + '</b> es <b>c^' + ((26 - k) % 26) + '</b>.';
+      } else {
+        el.className = 'msg err';
+        el.innerHTML = '❌ <b>Sin inverso (Monoide, no Grupo):</b> <code>m</code> ("HOLA" y "hola" → "hola") y/o <code>q</code> (" Hola " y "Hola" → "Hola") pierden información.';
+      }
+    }
+
+    function rst() {
+      m = 0;
+      q = 0;
+      document.getElementById('bm').classList.remove('on');
+      document.getElementById('bq').classList.remove('on');
+      document.getElementById('va').textContent = 0;
+      document.getElementById('vb').textContent = 0;
+      document.getElementById('sk').value = 0;
+      document.getElementById('txt').value = ' Hola ';
+      runPipe();
+    }
+
+    function draw(act, lns, col) {
+      var svg = document.getElementById('clk'), cx = 190, cy = 190, r = 150;
+      svg.innerHTML = '<circle cx="190" cy="190" r="150" fill="none" stroke="#334155" stroke-width="2"/><text x="190" y="195" text-anchor="middle" fill="#94a3b8" font-size="15" font-weight="bold">G = ⟨c⟩ ≅ ℤ₂₆</text>';
+      for (var j = 0; j < lns.length; j++) {
+        var a1 = (lns[j].a / 26) * 2 * Math.PI - Math.PI / 2;
+        var a2 = (lns[j].b / 26) * 2 * Math.PI - Math.PI / 2;
+        svg.innerHTML += '<line x1="' + (cx + r * Math.cos(a1)) + '" y1="' + (cy + r * Math.sin(a1)) + '" x2="' + (cx + r * Math.cos(a2)) + '" y2="' + (cy + r * Math.sin(a2)) + '" stroke="' + col + '" stroke-width="2.5"/>';
+      }
+      for (var i = 0; i < 26; i++) {
+        var ang = (i / 26) * 2 * Math.PI - Math.PI / 2;
+        var nx = cx + r * Math.cos(ang), ny = cy + r * Math.sin(ang);
+        var on = act.indexOf(i) !== -1;
+        var fill = i === 0 ? '#10b981' : (on ? col : '#1e293b');
+        var tc = (on || i === 0) ? '#0f172a' : '#f8fafc';
+        svg.innerHTML += '<circle cx="' + nx + '" cy="' + ny + '" r="' + (on ? 14 : 11) + '" fill="' + fill + '" stroke="#475569" stroke-width="1.5"/><text x="' + nx + '" y="' + (ny + 4) + '" text-anchor="middle" fill="' + tc + '" font-size="9.5" font-weight="bold">' + (i === 0 ? 'id' : 'c' + i) + '</text>';
+      }
+    }
+
+    function anim(step) {
+      clearInterval(tmr);
+      var cur = 0;
+      var vis = Array.of(0);
+      var lns = new Array();
+      tmr = setInterval(function() {
+        var nxt = (cur + step) % 26;
+        lns.push({ a: cur, b: nxt });
+        vis.push(nxt);
+        draw(vis, lns, '#38bdf8');
+        cur = nxt;
+        if (cur === 0) {
+          clearInterval(tmr);
+          var el = document.getElementById('msg1');
+          el.className = 'msg ok';
+          el.innerHTML = '✅ <b>Orden ' + lns.length + ':</b> Subgrupo cerrado generado por <b>c^' + step + '</b>.';
+        }
+      }, step === 1 ? 65 : 220);
+    }
+
+    function lagFail() {
+      clearInterval(tmr);
+      var nodes = Array.of(0, 6, 13, 19);
+      var lines = Array.of({ a: 0, b: 6 }, { a: 6, b: 13 }, { a: 13, b: 19 }, { a: 19, b: 0 });
+      draw(nodes, lines, '#f43f5e');
+      var el = document.getElementById('msg1');
+      el.className = 'msg err';
+      el.innerHTML = '❌ <b>Imposible por Lagrange:</b> 26 / 4 = 6.5 (no divide a 26). No existe subgrupo cerrado de 4 desplazamientos.';
+    }
+
+    function rstHomo() {
+      var p = document.getElementById('pool');
+      p.innerHTML = '';
+      document.getElementById('bEven').innerHTML = '';
+      document.getElementById('bOdd').innerHTML = '';
+      document.getElementById('msg2').className = 'msg';
+      for (var k = 0; k < 26; k++) {
+        p.innerHTML += '<span id="ch' + k + '" class="chip ' + (k % 2 === 0 ? 'c-even' : 'c-odd') + '">' + (k === 0 ? 'id' : 'c^' + k) + '</span>';
+      }
+    }
+
+    function runHomo() {
+      rstHomo();
+      var k = 0;
+      var iv = setInterval(function() {
+        if (k >= 26) {
+          clearInterval(iv);
+          var el = document.getElementById('msg2');
+          el.className = 'msg err';
+          el.innerHTML = '⚠️ <b>No es Isomorfismo:</b> El núcleo <b>ker(p)</b> tiene <b>13 elementos</b> (no solo {id}). Se pierde información.';
+          return;
+        }
+        var c = document.getElementById('ch' + k);
+        if (c) document.getElementById(k % 2 === 0 ? 'bEven' : 'bOdd').appendChild(c);
+        k++;
+      }, 50);
+    }
+
+    function getElem(idx) {
+      var a = Math.floor(idx / 52);
+      var b = Math.floor((idx % 52) / 26);
+      var k = idx % 26;
+      var parts = new Array();
+      if (a) parts.push('m');
+      if (b) parts.push('q');
+      if (k > 0) parts.push(k === 1 ? 'c' : 'c' + k);
+      return { a: a, b: b, k: k, label: parts.length ? parts.join('∘') : 'id' };
+    }
+
+    var cayleyTimer = null;
+    var sampleIdx = Array.of(0, 1, 13, 26, 27, 52, 53, 78);
+
+    function buildBaseTable() {
+      var wrap = document.getElementById('cayleyWrap');
+      var cs = 'padding:8px 10px; font-size:0.82rem; border:1px solid #334155; text-align:center; font-family:monospace; transition: all 0.25s;';
+      var html = '<table style="border-collapse:collapse; margin:auto;"><tr><th style="background:#1e293b; color:#38bdf8;' + cs + '">∘</th>';
+      for (var h = 0; h < sampleIdx.length; h++) {
+        html += '<th style="background:#1e293b; color:#f8fafc;' + cs + '">' + getElem(sampleIdx[h]).label + '</th>';
+      }
+      html += '</tr>';
+      for (var r = 0; r < sampleIdx.length; r++) {
+        var e1 = getElem(sampleIdx[r]);
+        html += '<tr><th style="background:#1e293b; color:#f8fafc;' + cs + '">' + e1.label + '</th>';
+        for (var c = 0; c < sampleIdx.length; c++) {
+          var e2 = getElem(sampleIdx[c]);
+          var ra = Math.max(e1.a, e2.a), rb = Math.max(e1.b, e2.b), rk = (e1.k + e2.k) % 26;
+          var resIdx = (ra * 52) + (rb * 26) + rk;
+          var resElem = getElem(resIdx);
+          html += '<td id="cell-' + r + '-' + c + '" data-res="' + resIdx + '" style="background:#0f172a; color:#94a3b8;' + cs + '">' + resElem.label + '</td>';
+        }
+        html += '</tr>';
+      }
+      html += '</table>';
+      wrap.innerHTML = html;
+    }
+
+    function paintCell(r, c, bg, fg) {
+      var td = document.getElementById('cell-' + r + '-' + c);
+      if (td) { td.style.background = bg; td.style.color = fg || '#ffffff'; td.style.fontWeight = 'bold'; }
+    }
+
+    function animProp(prop) {
+      clearInterval(cayleyTimer);
+      buildBaseTable();
+      var msg = document.getElementById('msg3');
+      var step = 0;
+
+      if (prop === 'interna') {
+        msg.className = 'msg ok';
+        msg.innerHTML = '⏳ <b>Verificando Clausura (Interna):</b> Escaneando fila por fila que todos los resultados pertenezcan al conjunto...';
+        cayleyTimer = setInterval(function() {
+          if (step >= 8) { clearInterval(cayleyTimer); msg.innerHTML = '✅ <b>Es Interna (Ley de Cierre):</b> Todas las celdas devuelven un paso válido del monoide (ningún elemento extraño).'; return; }
+          for (var c = 0; c < 8; c++) paintCell(step, c, '#0369a1', '#e0f2fe');
+          step++;
+        }, 180);
+      }
+
+      if (prop === 'conmutativa') {
+        msg.className = 'msg ok';
+        msg.innerHTML = '⏳ <b>Verificando Conmutatividad (Espejo):</b> Trazando diagonal y comparando pares simétricos (a∘b = b∘a)...';
+        for (var d = 0; d < 8; d++) paintCell(d, d, '#334155', '#cbd5e1');
+        var pairs = new Array();
+        for (var r = 0; r < 8; r++) { for (var c = r + 1; c < 8; c++) pairs.push({ r: r, c: c }); }
+        cayleyTimer = setInterval(function() {
+          if (step >= pairs.length) { clearInterval(cayleyTimer); msg.innerHTML = '✅ <b>Es Conmutativa:</b> La tabla es un espejo perfecto respecto a la diagonal principal (por ejemplo: <code>m∘c = c∘m</code>).'; return; }
+          var p = pairs[step];
+          paintCell(p.r, p.c, '#6d28d9', '#ede9fe');
+          paintCell(p.c, p.r, '#7c3aed', '#ede9fe');
+          step++;
+        }, 110);
+      }
+
+      if (prop === 'neutro') {
+        msg.className = 'msg ok';
+        msg.innerHTML = '⏳ <b>Buscando Elemento Neutro:</b> Comparando la Fila 0 y Columna 0 contra los encabezados...';
+        cayleyTimer = setInterval(function() {
+          if (step >= 8) { clearInterval(cayleyTimer); msg.innerHTML = '✅ <b>Elemento Neutro = id:</b> Su fila y su columna copian exactamente los encabezados sin alterar ningún paso.'; return; }
+          paintCell(0, step, '#047857', '#d1fae5');
+          paintCell(step, 0, '#047857', '#d1fae5');
+          step++;
+        }, 180);
+      }
+
+      if (prop === 'absorbente') {
+        msg.className = 'msg err';
+        msg.innerHTML = '⏳ <b>Buscando Elemento Absorbente:</b> Revisando si alguna fila repite siempre el mismo resultado...';
+        cayleyTimer = setInterval(function() {
+          if (step >= 8) { clearInterval(cayleyTimer); msg.innerHTML = '❌ <b>No existe Absorbente:</b> Incluso en la última fila (<code>m∘q</code>), los resultados siguen cambiando según el desplazamiento <code>cᵏ</code>.'; return; }
+          paintCell(7, step, '#be185d', '#fce7f3');
+          step++;
+        }, 180);
+      }
+
+      if (prop === 'idempotente') {
+        msg.className = 'msg ok';
+        msg.innerHTML = '⏳ <b>Revisando Diagonal Principal (x ∘ x = x):</b> Buscando qué elementos se devuelven a sí mismos...';
+        cayleyTimer = setInterval(function() {
+          if (step >= 8) { clearInterval(cayleyTimer); msg.innerHTML = '⚠️ <b>Solo 4 Idempotentes en todo el sistema:</b> <code>id, q, m, m∘q</code> (en dorado). Los que tienen desplazamiento <code>cᵏ</code> cambian (en gris).'; return; }
+          var idx = sampleIdx[step];
+          var isIdem = (idx % 26 === 0);
+          paintCell(step, step, isIdem ? '#d97706' : '#334155', isIdem ? '#fef3c7' : '#94a3b8');
+          step++;
+        }, 220);
+      }
+
+      if (prop === 'inverso') {
+        msg.className = 'msg err';
+        msg.innerHTML = '⏳ <b>Buscando el Neutro (id) en cada fila:</b> Si una fila no tiene <code>id</code>, ese paso no se puede deshacer...';
+        cayleyTimer = setInterval(function() {
+          if (step >= 8) { clearInterval(cayleyTimer); msg.innerHTML = '❌ <b>Falla el Inverso (Es Monoide, no Grupo):</b> Solo las primeras 3 filas (los <code>cᵏ</code>) contienen a <code>id</code> en verde. Las filas con <code>m</code> o <code>q</code> (en rojo) jamás vuelven a <code>id</code>.'; return; }
+          var hasId = (sampleIdx[step] < 26);
+          for (var c = 0; c < 8; c++) {
+            var td = document.getElementById('cell-' + step + '-' + c);
+            if (td && td.getAttribute('data-res') === '0') paintCell(step, c, '#059669', '#ecfdf5');
+            else if (!hasId) paintCell(step, c, '#9f1239', '#ffe4e6');
+          }
+          step++;
+        }, 240);
+      }
+    }
+
+    function renderFull104() {
+      clearInterval(cayleyTimer);
+      var wrap = document.getElementById('cayleyWrap');
+      var msg = document.getElementById('msg3');
+      var html = '<table style="border-collapse:collapse; margin:auto;">';
+      for (var r = 0; r < 104; r++) {
+        var e1 = getElem(r);
+        html += '<tr>';
+        for (var c = 0; c < 104; c++) {
+          var e2 = getElem(c);
+          var ra = Math.max(e1.a, e2.a), rb = Math.max(e1.b, e2.b), rk = (e1.k + e2.k) % 26;
+          var resElem = getElem((ra * 52) + (rb * 26) + rk);
+          var bg = (ra === 0 && rb === 0) ? '#065f46' : (ra === 1 && rb === 0) ? '#1e3a8a' : (ra === 0 && rb === 1) ? '#581c87' : '#78350f';
+          html += '<td title="' + e1.label + ' ∘ ' + e2.label + ' = ' + resElem.label + '" style="width:6px; height:6px; background:' + bg + '; border:1px solid #0f172a;"></td>';
+        }
+        html += '</tr>';
+      }
+      html += '</table>';
+      wrap.innerHTML = html;
+      msg.className = 'msg ok';
+      msg.innerHTML = '📊 <b>Matriz Completa (104×104 = 10.816 celdas):</b> En verde arriba a la izquierda se distingue el subgrupo reversible <b>ℤ₂₆</b>; los otros 3 bloques absorben hacia pasos con <code>m</code> y <code>q</code>.';
+    }
+
+    runPipe();
+    draw(new Array(), new Array(), '#38bdf8');
+    rstHomo();
+    animProp('interna');
+  </script>
+</body>
+</html>
