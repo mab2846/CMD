@@ -64,7 +64,8 @@
       <button class="tab-btn" onclick="go(1)">2. Cíclico ℤ₂₆ y Lagrange</button>
       <button class="tab-btn" onclick="go(2)">3. Homomorfismo</button>
       <button class="tab-btn" onclick="go(3)">4. Tabla de Cayley (104×104)</button>
-      <button class="tab-btn" onclick="go(4)">5. Etapa 4: Código (6,3)</button>
+      <button class="tab-btn" onclick="go(4)">5. Límites y Objetivos (8-10)</button>
+      <button class="tab-btn" onclick="go(5)">6. Errores y Rúbrica (13-14)</button>
     </div>
   </header>
   <div class="wrap">
@@ -168,6 +169,120 @@
         </div>
       </div>
     </div>
+    <!-- PESTAÑA 5: FILAS 8, 9 Y 10 (LÍMITES, CONTEXTO Y OBJETIVOS) -->
+    <div id="p4" class="panel">
+      <div class="grid">
+        <div class="card">
+          <h2>Fila 8: Límites del Modelo (Simulación en Vivo)</h2>
+          <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1rem;">
+            Prueba cómo se rompe la ofuscación por fuerza bruta o cómo cambia toda la estructura si agregamos la letra <b>«ñ»</b> o números:
+          </p>
+
+          <!-- Simulador 1: Sensibilidad al alfabeto -->
+          <div class="slider-box">
+            <strong style="color:var(--accent); display:block; margin-bottom:0.5rem;">1. Sensibilidad a nuevos caracteres (Clausura y Lagrange):</strong>
+            <div class="row" style="margin-bottom:0.5rem;">
+              <button class="btn btn-gray" onclick="setAlpha(26)">26 letras (Base)</button>
+              <button class="btn" style="background:var(--warning); color:#0f172a;" onclick="setAlpha(27)">27 letras (+ «ñ»)</button>
+              <button class="btn" style="background:var(--purple); color:#fff;" onclick="setAlpha(36)">36 chars (+ 0-9)</button>
+            </div>
+            <div id="alphaInfo" style="font-size:0.85rem; font-family:monospace; color:#e2e8f0; margin-top:0.5rem;">
+              • Período de c: <b>|c| = 26</b> | Total Monoide: <b>104 elementos</b><br>
+              • Divisores de Lagrange: <b>{1, 2, 13, 26}</b>
+            </div>
+          </div>
+
+          <!-- Simulador 2: Fuerza Bruta César -->
+          <div class="slider-box" style="margin-bottom:0;">
+            <strong style="color:var(--danger); display:block; margin-bottom:0.5rem;">2. Insuficiencia Criptográfica (Fuerza Bruta):</strong>
+            <div style="display:flex; gap:0.5rem; margin-bottom:0.5rem;">
+              <input type="text" id="cipherIn" value="Krod" style="margin:0; padding:0.5rem;" />
+              <button class="btn" style="background:var(--danger); color:#fff;" onclick="bruteForce()">Romper en 26 pasos</button>
+            </div>
+            <div id="bruteOut" style="max-height:130px; overflow:auto; font-family:monospace; font-size:0.8rem; background:#0b1120; padding:0.6rem; border-radius:6px; border:1px solid var(--border); color:var(--muted);">
+              Pulsa "Romper en 26 pasos" para probar todos los desplazamientos posibles...
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Filas 9 y 10: Contexto y Objetivos de Aprendizaje</h2>
+          <div class="box-m" style="margin-bottom:1rem;">
+            <strong style="color:var(--warning);">Fila 9 · Destinatarios y Contexto</strong>
+            <ul>
+              <li><b>Nivel:</b> 1.º / 2.º año de Ingeniería en Sistemas/Informática, Lic. en Cs. de la Computación o Prof. en Matemática.</li>
+              <li><b>Espacio Curricular:</b> Álgebra I / Matemática Discreta / Estructuras Algebraicas (Unidad III).</li>
+              <li><b>Tiempo estimado:</b> 90 a 120 minutos (clase teórico-práctica).</li>
+            </ul>
+          </div>
+
+          <div class="box-g" style="margin-top:0;">
+            <strong style="color:var(--success);">Fila 10 · Objetivos de Aprendizaje</strong>
+            <ul>
+              <li>Modelar la composición de transformaciones sobre textos (clausura, asociatividad, neutro y conmutatividad).</li>
+              <li>Justificar por qué forma un <b>monoide</b> y no un grupo (identificando pasos reversibles vs. pérdida de datos).</li>
+              <li>Analizar el grupo cíclico <b>⟨c⟩ ≅ ℤ₂₆</b>, su orden, sus 12 generadores y subgrupos.</li>
+              <li>Aplicar el <b>Teorema de Lagrange</b> y homomorfismos (núcleo e imagen).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PESTAÑA 6: FILAS 11, 12, 13 Y 14 (CONSIGNA, ERRORES Y RÚBRICA) -->
+   <!-- PESTAÑA 6: FILAS 13 Y 14 (ERRORES PREVISIBLES Y RÚBRICA) -->
+   <div id="p5" class="panel">
+    <div class="grid">
+      <div class="card">
+        <h2>Fila 13: Los 6 Errores Previsibles (Clic para ver solución)</h2>
+        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:0.75rem;">Haz clic en cada error común para desplegar su corrección conceptual:</p>
+        <div style="display:flex; flex-direction:column; gap:0.5rem;">
+          <button class="sim-btn" style="margin:0; padding:0.65rem;" onclick="showErr(0)"><strong style="color:var(--danger);">1. Confundir clausura con pasos básicos</strong></button>
+          <button class="sim-btn" style="margin:0; padding:0.65rem;" onclick="showErr(1)"><strong style="color:var(--danger);">2. Confundir conmutatividad con asociatividad</strong></button>
+          <button class="sim-btn" style="margin:0; padding:0.65rem;" onclick="showErr(2)"><strong style="color:var(--danger);">3. Suponer que m y q tienen inversa</strong></button>
+          <button class="sim-btn" style="margin:0; padding:0.65rem;" onclick="showErr(3)"><strong style="color:var(--danger);">4. Confundir Monoide con Grupo</strong></button>
+          <button class="sim-btn" style="margin:0; padding:0.65rem;" onclick="showErr(4)"><strong style="color:var(--danger);">5. Aplicar mal el Teorema de Lagrange</strong></button>
+          <button class="sim-btn" style="margin:0; padding:0.65rem;" onclick="showErr(5)"><strong style="color:var(--danger);">6. Confundir Núcleo con Imagen</strong></button>
+        </div>
+        <div id="errDetail" class="msg ok" style="margin-top:0.9rem;">
+          Selecciona uno de los 6 errores previsibles para ver cómo evitarlo en la evaluación.
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Fila 14: Criterios de Corrección (100 pts)</h2>
+        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1.25rem;">
+          Distribución del puntaje de la actividad, priorizando la justificación formal y el uso de contraejemplos:
+        </p>
+        <div style="font-size:0.9rem; display:flex; flex-direction:column; gap:1rem;">
+          <div>
+            <strong>1. Composición y propiedades</strong> <span style="float:right; color:var(--accent); font-weight:bold;">25 pts</span>
+            <div style="height:8px; background:var(--bg); border-radius:4px; margin-top:4px;"><div style="width:25%; height:100%; background:var(--accent); border-radius:4px;"></div></div>
+          </div>
+          <div>
+            <strong>2. Clasificación (Monoide) e inversos</strong> <span style="float:right; color:var(--success); font-weight:bold;">25 pts</span>
+            <div style="height:8px; background:var(--bg); border-radius:4px; margin-top:4px;"><div style="width:25%; height:100%; background:var(--success); border-radius:4px;"></div></div>
+          </div>
+          <div>
+            <strong>3. Análisis del grupo cíclico ⟨c⟩</strong> <span style="float:right; color:var(--warning); font-weight:bold;">20 pts</span>
+            <div style="height:8px; background:var(--bg); border-radius:4px; margin-top:4px;"><div style="width:20%; height:100%; background:var(--warning); border-radius:4px;"></div></div>
+          </div>
+          <div>
+            <strong>4. Teorema de Lagrange (subgrupos)</strong> <span style="float:right; color:var(--purple); font-weight:bold;">15 pts</span>
+            <div style="height:8px; background:var(--bg); border-radius:4px; margin-top:4px;"><div style="width:15%; height:100%; background:var(--purple); border-radius:4px;"></div></div>
+          </div>
+          <div>
+            <strong>5. Homomorfismo (núcleo e imagen)</strong> <span style="float:right; color:var(--danger); font-weight:bold;">15 pts</span>
+            <div style="height:8px; background:var(--bg); border-radius:4px; margin-top:4px;"><div style="width:15%; height:100%; background:var(--danger); border-radius:4px;"></div></div>
+          </div>
+        </div>
+        <div class="box-g" style="margin-top:1.5rem;">
+          <strong style="color:var(--success);">Criterio General</strong>
+          <p style="font-size:0.85rem; margin-top:0.3rem;">Se evalúa especialmente la fundamentación matemática y la presentación de contraejemplos concretos (como <code>m</code> para descartar Grupo).</p>
+        </div>
+      </div>
+    </div>
+  </div>
   </div>
   <script>
     var m = 0, q = 0, tmr = null;
@@ -473,6 +588,48 @@
     draw(new Array(), new Array(), '#38bdf8');
     rstHomo();
     animProp('interna');
+     // --- LÓGICA PESTAÑAS 5 Y 6 (FILAS 8 A 14) ---
+     function setAlpha(n) {
+      var divs = new Array();
+      for (var d = 1; d <= n; d++) {
+        if (n % d === 0) divs.push(d);
+      }
+      var total = 2 * 2 * n;
+      var note = n === 26
+        ? 'Modelo original (sin ñ ni números).'
+        : (n === 27 ? 'Con «ñ»: 27 es impar, desaparece el subgrupo de orden 2 (ROT13)!' : 'Alfanumérico: cambia el período a 36 y aparecen 9 divisores.');
+      document.getElementById('alphaInfo').innerHTML =
+        '• Período de c: <b>|c| = ' + n + '</b> | Total Monoide: <b>' + total + ' elementos</b><br>' +
+        '• Divisores de Lagrange: <b>{' + divs.join(', ') + '}</b><br>' +
+        '<span style="color:var(--warning);">' + note + '</span>';
+    }
+
+    function bruteForce() {
+      var txt = document.getElementById('cipherIn').value || 'Krod';
+      var out = document.getElementById('bruteOut');
+      var lines = new Array();
+      for (var k = 0; k < 26; k++) {
+        var decoded = shift(txt, (26 - k) % 26);
+        var highlight = (decoded.toLowerCase() === 'hola') ? ' style="color:#10b981; font-weight:bold;"' : '';
+        lines.push('<div' + highlight + '>k=' + k + ': ' + decoded + (highlight ? ' ← ¡DESCIFRADO!' : '') + '</div>');
+      }
+      out.innerHTML = lines.join('');
+    }
+
+    var errTexts = Array.of(
+      '✅ <b>Clausura vs. Generadores:</b> Combinar dos pasos básicos (como <code>m</code> y <code>c</code>) da <code>m∘c</code>, que no es uno de los 4 iniciales pero sí pertenece al conjunto de 104 combinaciones generado por ellos.',
+      '✅ <b>Conmutatividad vs. Asociatividad:</b> Conmutar es cambiar el orden (<code>a∘b = b∘a</code>); asociar es cambiar la agrupación de paréntesis (<code>(a∘b)∘c = a∘(b∘c)</code>) manteniendo la secuencia.',
+      '✅ <b>Pérdida de información:</b> Ni <code>m</code> ni <code>q</code> son inyectivas. Distintas entradas (<code>"HOLA"</code> y <code>"hola"</code>) producen la misma salida, haciendo imposible recuperar el original con una función inversa.',
+      '✅ <b>Monoide vs. Grupo:</b> Tener clausura, asociatividad y neutro alcanza para ser <b>Monoide</b>. Para ser <b>Grupo</b> se exige además que <i>todos</i> los elementos tengan inverso.',
+      '✅ <b>Teorema de Lagrange:</b> El orden de todo subgrupo divide al orden del grupo (26). Como <code>4 ∤ 26</code>, no existe subgrupo de 4 elementos. Además, el recíproco no vale en grupos generales (sí en cíclicos).',
+      '✅ <b>Núcleo vs. Imagen:</b> La imagen son los resultados posibles en el codominio (<code>ℤ₂ = {0, 1}</code>). El núcleo (<code>ker</code>) son los elementos del dominio que van a parar al neutro del codominio (los 13 desplazamientos pares).'
+    );
+
+    function showErr(idx) {
+      var el = document.getElementById('errDetail');
+      el.className = 'msg ok';
+      el.innerHTML = errTexts.at(idx);
+    }
   </script>
 </body>
 </html>
