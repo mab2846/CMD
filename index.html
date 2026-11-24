@@ -162,6 +162,8 @@
           <button class="btn" style="background:var(--warning); color:#0f172a;" onclick="animProp('idempotente')">5. Idempotentes (Diagonal)</button>
           <button class="btn" style="background:#f43f5e; color:#fff;" onclick="animProp('inverso')">6. Inversos (Falla m y q)</button>
           <button class="btn btn-gray" onclick="renderFull104()">Ver Matriz 104×104</button>
+          <button class="btn btn-gray" style="border:1px solid var(--success); color:var(--success);" onclick="renderFull104('z26')">Subgrupo ℤ₂₆ (104×104)</button>
+          <button class="btn btn-gray" style="border:1px solid var(--warning); color:var(--warning);" onclick="renderFull104('idem')">4 Idempotentes (104×104)</button>
         </div>
         <div id="cayleyWrap" style="max-height:400px; overflow:auto; border:1px solid var(--border); border-radius:8px; margin-top:1rem; background:#0b1120; padding:0.75rem;"></div>
         <div id="msg3" class="msg ok" style="margin-top:1rem;">
@@ -561,7 +563,8 @@
       }
     }
 
-    function renderFull104() {
+    function renderFull104(mode) {
+      mode = mode || 'all';
       clearInterval(cayleyTimer);
       var wrap = document.getElementById('cayleyWrap');
       var msg = document.getElementById('msg3');
@@ -572,8 +575,16 @@
         for (var c = 0; c < 104; c++) {
           var e2 = getElem(c);
           var ra = Math.max(e1.a, e2.a), rb = Math.max(e1.b, e2.b), rk = (e1.k + e2.k) % 26;
-          var resElem = getElem((ra * 52) + (rb * 26) + rk);
+          var resIdx = (ra * 52) + (rb * 26) + rk;
+          var resElem = getElem(resIdx);
           var bg = (ra === 0 && rb === 0) ? '#065f46' : (ra === 1 && rb === 0) ? '#1e3a8a' : (ra === 0 && rb === 1) ? '#581c87' : '#78350f';
+
+          if (mode === 'z26' && (ra !== 0 || rb !== 0)) bg = '#0f172a';
+          if (mode === 'idem') {
+            var isIdem = (r === c) && (resIdx === r);
+            bg = isIdem ? '#f59e0b' : '#0f172a';
+          }
+
           html += '<td title="' + e1.label + ' ∘ ' + e2.label + ' = ' + resElem.label + '" style="width:6px; height:6px; background:' + bg + '; border:1px solid #0f172a;"></td>';
         }
         html += '</tr>';
@@ -581,8 +592,15 @@
       html += '</table>';
       wrap.innerHTML = html;
       msg.className = 'msg ok';
-      msg.innerHTML = '📊 <b>Matriz Completa (104×104 = 10.816 celdas):</b> En verde arriba a la izquierda se distingue el subgrupo reversible <b>ℤ₂₆</b>; los otros 3 bloques absorben hacia pasos con <code>m</code> y <code>q</code>.';
+      if (mode === 'z26') {
+        msg.innerHTML = '🟢 <b>Subgrupo Reversible ℤ₂₆ (26×26):</b> Encerrado arriba a la izquierda en verde; operar dos desplazamientos nunca sale de este bloque (clausura de subgrupo).';
+      } else if (mode === 'idem') {
+        msg.innerHTML = '🟡 <b>Los 4 Idempotentes en la matriz 104×104:</b> Solo <code>id</code>, <code>q</code>, <code>m</code> y <code>m∘q</code> cumplen <code>x ∘ x = x</code> en toda la diagonal principal.';
+      } else {
+        msg.innerHTML = '📊 <b>Matriz Completa (104×104 = 10.816 celdas):</b> En verde arriba a la izquierda el subgrupo <b>ℤ₂₆</b>; los otros 3 bloques absorben hacia pasos con <code>m</code> y <code>q</code>.';
+      }
     }
+
 
     runPipe();
     draw(new Array(), new Array(), '#38bdf8');
