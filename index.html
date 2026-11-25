@@ -57,7 +57,7 @@
   <header>
     <div class="brand">
       <h1>Complementos de Matemática Discreta — Grupo N°28</h1>
-      <p>Etapa N°3: Limpieza de Formulario Web (Filas 1 a 7)</p>
+      <p>Etapa N°3: Limpieza de Formulario Web</p>
     </div>
     <div class="tabs">
       <button class="tab-btn active" onclick="go(0)">1. Flujo de Pasos (104)</button>
@@ -72,7 +72,7 @@
     <div id="p0" class="panel active">
       <div class="grid">
         <div class="card">
-          <h2>Simulador de Pasos (Filas 1 a 3)</h2>
+          <h2>Simulador de Pasos</h2>
           <label>Texto de entrada (espacios marcados con •):</label>
           <input type="text" id="txt" value=" Hola " oninput="runPipe()" />
           <div class="row">
@@ -99,7 +99,7 @@
         </div>
 
         <div class="card">
-          <h2>Estructura Elegida (Filas 4 a 6)</h2>
+          <h2>Estructura Elegida</h2>
           <div class="box-m">
             <strong style="color:var(--warning); font-size:1.05rem;">Monoide Conmutativo (104 elementos)</strong>
             <p style="font-size:0.85rem; color:var(--muted); margin-top:0.3rem;">2 (m) × 2 (q) × 26 (c) = 104 combinaciones únicas</p>
@@ -124,7 +124,7 @@
           <svg id="clk" width="380" height="380" viewBox="0 0 380 380"></svg>
         </div>
         <div class="card">
-          <h2>Órdenes, Generadores y Lagrange (Fila 7)</h2>
+          <h2>Órdenes, Generadores y Lagrange</h2>
           <button class="sim-btn" onclick="anim(1)"><strong style="color:var(--accent)">1. Orden de c: |c| = 26 (Generador)</strong><br><small>Recorre los 26 pasos. Hay φ(26) = 12 generadores.</small></button>
           <button class="sim-btn" onclick="anim(13)"><strong style="color:var(--accent)">2. Orden de c¹³: |c¹³| = 2 (ROT13)</strong><br><small>Salta medio alfabeto ida y vuelta en 2 pasos.</small></button>
           <button class="sim-btn" onclick="anim(2)"><strong style="color:var(--accent)">3. Subgrupo ⟨c²⟩: Orden 13</strong><br><small>Visita solo los 13 desplazamientos pares.</small></button>
@@ -161,11 +161,17 @@
           <button class="btn" style="background:#ec4899; color:#fff;" onclick="animProp('absorbente')">4. Absorbente (No hay)</button>
           <button class="btn" style="background:var(--warning); color:#0f172a;" onclick="animProp('idempotente')">5. Idempotentes (Diagonal)</button>
           <button class="btn" style="background:#f43f5e; color:#fff;" onclick="animProp('inverso')">6. Inversos (Falla m y q)</button>
-          <button class="btn btn-gray" onclick="renderFull104()">Ver Matriz 104×104</button>
           <button class="btn btn-gray" style="border:1px solid var(--success); color:var(--success);" onclick="renderFull104('z26')">Subgrupo ℤ₂₆ (104×104)</button>
           <button class="btn btn-gray" style="border:1px solid var(--warning); color:var(--warning);" onclick="renderFull104('idem')">4 Idempotentes (104×104)</button>
+          <button class="btn btn-gray" onclick="renderFull104()">Ver Matriz 104×104</button>
         </div>
         <div id="cayleyWrap" style="max-height:400px; overflow:auto; border:1px solid var(--border); border-radius:8px; margin-top:1rem; background:#0b1120; padding:0.75rem;"></div>
+        <div id="cayleyLegend" style="display:flex; flex-wrap:wrap; justify-content:center; gap:1rem; margin-top:0.75rem; font-size:0.82rem; color:var(--muted);">
+          <span><b style="display:inline-block; width:12px; height:12px; background:#065f46; border:1px solid #10b981; vertical-align:middle; margin-right:4px;"></b>Solo cᵏ (Subgrupo ℤ₂₆ reversible)</span>
+          <span><b style="display:inline-block; width:12px; height:12px; background:#581c87; border:1px solid #a855f7; vertical-align:middle; margin-right:4px;"></b>Con q (sin m)</span>
+          <span><b style="display:inline-block; width:12px; height:12px; background:#1e3a8a; border:1px solid #38bdf8; vertical-align:middle; margin-right:4px;"></b>Con m (sin q)</span>
+          <span><b style="display:inline-block; width:12px; height:12px; background:#78350f; border:1px solid #f59e0b; vertical-align:middle; margin-right:4px;"></b>Con m ∘ q (ambos activos)</span>
+        </div>
         <div id="msg3" class="msg ok" style="margin-top:1rem;">
           Selecciona una propiedad arriba para ver su animación paso a paso sobre la tabla.
         </div>
@@ -208,9 +214,9 @@
         </div>
 
         <div class="card">
-          <h2>Filas 9 y 10: Contexto y Objetivos de Aprendizaje</h2>
+          <h2>Contexto y Objetivos de Aprendizaje</h2>
           <div class="box-m" style="margin-bottom:1rem;">
-            <strong style="color:var(--warning);">Fila 9 · Destinatarios y Contexto</strong>
+            <strong style="color:var(--warning);">Destinatarios y Contexto</strong>
             <ul>
               <li><b>Nivel:</b> 1.º / 2.º año de Ingeniería en Sistemas/Informática, Lic. en Cs. de la Computación o Prof. en Matemática.</li>
               <li><b>Espacio Curricular:</b> Álgebra I / Matemática Discreta / Estructuras Algebraicas (Unidad III).</li>
