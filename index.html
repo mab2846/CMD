@@ -1,659 +1,209 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Modelado Algebraico | Grupo N°28</title>
-  <style>
-    :root {
-      --bg: #0f172a; --card: #1e293b; --border: #334155;
-      --text: #f8fafc; --muted: #94a3b8; --accent: #38bdf8;
-      --success: #10b981; --danger: #f43f5e; --warning: #f59e0b; --purple: #a855f7;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
-    body { background: var(--bg); color: var(--text); min-height: 100vh; }
-    header { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
-    .brand h1 { font-size: 1.2rem; color: var(--accent); }
-    .brand p { font-size: 0.85rem; color: var(--muted); }
-    .tabs { display: flex; gap: 0.5rem; }
-    .tab-btn { background: var(--bg); border: 1px solid var(--border); color: var(--muted); padding: 0.6rem 1rem; border-radius: 8px; cursor: pointer; font-weight: bold; }
-    .tab-btn.active { background: var(--accent); color: #0f172a; border-color: var(--accent); }
-    .wrap { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
-    .panel { display: none; }
-    .panel.active { display: block; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-    @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; }
-    .card h2 { font-size: 1.05rem; color: var(--accent); margin-bottom: 1rem; }
-    input[type="text"] { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 0.75rem; border-radius: 8px; font-size: 1.1rem; font-family: monospace; margin: 0.4rem 0 1rem; }
-    .row { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
-    .t-btn { flex: 1; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); cursor: pointer; text-align: left; }
-    .t-btn.on { border-color: var(--warning); background: rgba(245, 158, 11, 0.15); }
-    .slider-box { background: var(--bg); padding: 0.9rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 1rem; }
-    input[type="range"] { width: 100%; margin-top: 0.5rem; accent-color: var(--accent); }
-    .screen { background: #0b1120; border: 1px dashed var(--border); border-radius: 10px; padding: 1rem; text-align: center; margin-bottom: 1rem; }
-    .out { font-family: monospace; font-size: 1.6rem; color: var(--accent); letter-spacing: 2px; margin: 0.5rem 0; }
-    .dot { color: var(--warning); }
-    .meta { display: flex; justify-content: space-around; font-family: monospace; font-size: 0.95rem; background: rgba(56, 189, 248, 0.1); padding: 0.6rem; border-radius: 6px; }
-    .btn { padding: 0.75rem 1rem; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
-    .btn-ok { background: var(--success); color: #052e16; flex: 1; }
-    .btn-gray { background: var(--border); color: var(--text); }
-    .msg { margin-top: 1rem; padding: 0.9rem; border-radius: 8px; font-size: 0.9rem; display: none; line-height: 1.4; }
-    .msg.ok { display: block; background: rgba(16, 185, 129, 0.15); border: 1px solid var(--success); color: #a7f3d0; }
-    .msg.err { display: block; background: rgba(244, 63, 94, 0.15); border: 1px solid var(--danger); color: #fecdd3; }
-    .box-m { border: 2px solid var(--warning); border-radius: 10px; padding: 1rem; background: rgba(245, 158, 11, 0.05); }
-    .box-g { border: 2px solid var(--success); border-radius: 8px; padding: 0.9rem; background: rgba(16, 185, 129, 0.1); margin-top: 1rem; }
-    ul { margin: 0.75rem 0 0 1.2rem; font-size: 0.9rem; line-height: 1.5; }
-    .sim-btn { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 0.85rem; border-radius: 8px; text-align: left; cursor: pointer; margin-bottom: 0.6rem; }
-    .sim-btn:hover { border-color: var(--accent); }
-    .buckets { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
-    .bucket { background: #0b1120; border: 2px solid var(--border); border-radius: 10px; padding: 1rem; min-height: 160px; }
-    .pool { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
-    .chip { padding: 0.3rem 0.6rem; border-radius: 5px; font-family: monospace; font-size: 0.85rem; font-weight: bold; }
-    .c-even { background: rgba(168, 85, 247, 0.25); border: 1px solid var(--purple); color: #e9d5ff; }
-    .c-odd { background: rgba(56, 189, 248, 0.25); border: 1px solid var(--accent); color: #bae6fd; }
-  </style>
+<meta charset="UTF-8">
+<title>Simulador Transición de Estados - Udemy | UNJu</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+  body { background: #0f172a; color: #f8fafc; padding: 10px; display: flex; flex-direction: column; gap: 10px; height: 100vh; }
+  header { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; }
+  header h1 { font-size: 1rem; color: #38bdf8; }
+  header p { font-size: 0.78rem; color: #94a3b8; }
+  .btns { display: flex; gap: 8px; }
+  button { border: none; border-radius: 6px; padding: 7px 12px; font-weight: 600; cursor: pointer; font-size: 0.78rem; transition: 0.2s; }
+  .cp { background: #a435f0; color: #fff; }
+  .cp:hover { filter: brightness(1.15); }
+  .rst { background: #475569; color: #fff; }
+  .grid { display: grid; grid-template-columns: 270px 1.1fr 1.1fr; gap: 10px; flex: 1; min-height: 0; }
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
+  .card h2 { font-size: 0.85rem; color: #38bdf8; border-bottom: 1px solid #334155; padding-bottom: 5px; text-transform: uppercase; }
+  .banner { background: #0f172a; border-left: 4px solid #22c55e; padding: 8px; border-radius: 5px; }
+  .banner.err { border-left-color: #ef4444; }
+  .banner small { color: #94a3b8; font-size: 0.7rem; display: block; }
+  .banner strong { font-size: 0.9rem; }
+  .banner div { font-size: 0.75rem; color: #cbd5e1; margin-top: 2px; }
+  .evts { display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
+  .ev { background: #0f172a; color: #f8fafc; border: 1px solid #334155; padding: 6px 9px; text-align: left; display: flex; justify-content: space-between; align-items: center; }
+  .ev.ok { border-color: #38bdf8; background: rgba(56,189,248,0.15); }
+  .ev.ok:hover { background: rgba(56,189,248,0.3); }
+  .ev.no { opacity: 0.45; }
+  .tag { font-size: 0.68rem; padding: 2px 5px; border-radius: 4px; background: #334155; }
+  .ok .tag { background: #38bdf8; color: #0f172a; }
+  .msg { font-size: 0.75rem; padding: 7px; border-radius: 5px; background: rgba(245,158,11,0.15); border: 1px solid #f59e0b; color: #fde68a; min-height: 40px; }
+  .svg-box { flex: 1; background: #0b1120; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+  svg { width: 100%; height: 100%; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.74rem; text-align: center; }
+  th, td { border: 1px solid #334155; padding: 6px 3px; }
+  th { background: #0f172a; color: #38bdf8; }
+  td.sc { text-align: left; font-weight: 600; background: #0f172a; padding-left: 6px; }
+  tr.act td { background: rgba(56,189,248,0.15); }
+  tr.act td.sc { color: #22c55e; border-left: 3px solid #22c55e; }
+  td.hit { background: #22c55e !important; color: #052e16 !important; font-weight: 800; }
+  td.hit.ehit { background: #ef4444 !important; color: #fff !important; }
+  .log { background: #0f172a; border: 1px solid #334155; border-radius: 5px; padding: 7px; font-size: 0.74rem; color: #cbd5e1; flex: 1; overflow-y: auto; }
+  .log div { border-bottom: 1px dashed #1e293b; padding: 2px 0; }
+</style>
 </head>
 <body>
-  <header>
-    <div class="brand">
-      <h1>Complementos de Matemática Discreta — Grupo N°28</h1>
-      <p>Etapa N°3: Limpieza de Formulario Web</p>
-    </div>
-    <div class="tabs">
-      <button class="tab-btn active" onclick="go(0)">1. Flujo de Pasos (104)</button>
-      <button class="tab-btn" onclick="go(1)">2. Cíclico ℤ₂₆ y Lagrange</button>
-      <button class="tab-btn" onclick="go(2)">3. Homomorfismo</button>
-      <button class="tab-btn" onclick="go(3)">4. Tabla de Cayley (104×104)</button>
-      <button class="tab-btn" onclick="go(4)">5. Límites y Objetivos (8-10)</button>
-      <button class="tab-btn" onclick="go(5)">6. Errores y Rúbrica (13-14)</button>
-    </div>
-  </header>
-  <div class="wrap">
-    <div id="p0" class="panel active">
-      <div class="grid">
-        <div class="card">
-          <h2>Simulador de Pasos</h2>
-          <label>Texto de entrada (espacios marcados con •):</label>
-          <input type="text" id="txt" value=" Hola " oninput="runPipe()" />
-          <div class="row">
-            <button id="bm" class="t-btn" onclick="togM()"><strong>m (Minúsculas)</strong><br><small>m² = m (a = <span id="va">0</span>)</small></button>
-            <button id="bq" class="t-btn" onclick="togQ()"><strong>q (Quitar espacios)</strong><br><small>q² = q (b = <span id="vb">0</span>)</small></button>
-          </div>
-          <div class="slider-box">
-            <div><strong>cᵏ (Desplazamiento A→Z):</strong> k = <strong id="vk" style="color:var(--accent)">0</strong> (c²⁶ = id)</div>
-            <input type="range" id="sk" min="0" max="25" value="0" oninput="runPipe()" />
-          </div>
-          <div class="screen">
-            <small style="color:var(--muted)">RESULTADO</small>
-            <div id="out" class="out">•Hola•</div>
-            <div class="meta">
-              <span>Forma: <strong id="nf" style="color:var(--warning)">id</strong></span>
-              <span>Paso #<strong id="idx">1</strong> de 104</span>
-            </div>
-          </div>
-          <div class="row">
-            <button class="btn btn-ok" onclick="undo()">↺ Intentar Deshacer (Inverso)</button>
-            <button class="btn btn-gray" onclick="rst()">Reset</button>
-          </div>
-          <div id="msg0" class="msg"></div>
-        </div>
-
-        <div class="card">
-          <h2>Estructura Elegida</h2>
-          <div class="box-m">
-            <strong style="color:var(--warning); font-size:1.05rem;">Monoide Conmutativo (104 elementos)</strong>
-            <p style="font-size:0.85rem; color:var(--muted); margin-top:0.3rem;">2 (m) × 2 (q) × 26 (c) = 104 combinaciones únicas</p>
-            <ul>
-              <li><b>Clausura y Asociatividad:</b> Componer pasos da otro paso válido.</li>
-              <li><b>Neutro:</b> <code>id</code> deja el texto intacto.</li>
-              <li><b>Conmutatividad:</b> <code>c(m(" Hola ")) = " ipmb " = m(c(" Hola "))</code>.</li>
-              <li><b>Descartado ℤ₂×ℤ₂×ℤ₂₆:</b> Ahí m² = id, pero aquí m² = m.</li>
-            </ul>
-            <div class="box-g">
-              <strong style="color:var(--success);">Subgrupo Reversible ⟨c⟩ ≅ ℤ₂₆ (26 pasos)</strong>
-              <p style="font-size:0.85rem; margin-top:0.3rem;">Solo los desplazamientos <b>cᵏ</b> tienen inverso <b>c²⁶⁻ᵏ</b>. Como <code>m</code> y <code>q</code> pierden datos, no es grupo.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="p1" class="panel">
-      <div class="grid">
-        <div class="card" style="display:flex; justify-content:center; align-items:center; background:#0b1120;">
-          <svg id="clk" width="380" height="380" viewBox="0 0 380 380"></svg>
-        </div>
-        <div class="card">
-          <h2>Órdenes, Generadores y Lagrange</h2>
-          <button class="sim-btn" onclick="anim(1)"><strong style="color:var(--accent)">1. Orden de c: |c| = 26 (Generador)</strong><br><small>Recorre los 26 pasos. Hay φ(26) = 12 generadores.</small></button>
-          <button class="sim-btn" onclick="anim(13)"><strong style="color:var(--accent)">2. Orden de c¹³: |c¹³| = 2 (ROT13)</strong><br><small>Salta medio alfabeto ida y vuelta en 2 pasos.</small></button>
-          <button class="sim-btn" onclick="anim(2)"><strong style="color:var(--accent)">3. Subgrupo ⟨c²⟩: Orden 13</strong><br><small>Visita solo los 13 desplazamientos pares.</small></button>
-          <button class="sim-btn" style="border-color:var(--danger)" onclick="lagFail()"><strong style="color:var(--danger)">4. ¿Subgrupo de 4 desplazamientos? (Lagrange)</strong><br><small>Divisores de 26: 1, 2, 13, 26. Como 4 ∤ 26, es imposible.</small></button>
-          <div id="msg1" class="msg ok">Elige un botón para animar el ciclo en ℤ₂₆.</div>
-        </div>
-      </div>
-    </div>
-
-    <div id="p2" class="panel">
-      <div class="card">
-        <h2>Homomorfismo de Paridad: p(cᵏ) = clase de k en ℤ₂</h2>
-        <p style="font-size:0.9rem; color:var(--muted); margin-bottom:1rem;">Bien definido porque <b>2 | 26</b> (en ℤ₄ fallaría porque 4 ∤ 26).</p>
-        <button class="btn" style="background:var(--accent); color:#0f172a;" onclick="runHomo()">▶ Ejecutar Homomorfismo</button>
-        <button class="btn btn-gray" onclick="rstHomo()">Reiniciar</button>
-        <div id="pool" class="pool"></div>
-        <div class="buckets">
-          <div class="bucket" style="border-color:var(--purple)"><strong style="color:var(--purple)">Par — Núcleo ker(p) (13 elementos)</strong><div id="bEven" class="pool"></div></div>
-          <div class="bucket" style="border-color:var(--accent)"><strong style="color:var(--accent)">Impar — Imagen Im(p) = ℤ₂ (13 elementos)</strong><div id="bOdd" class="pool"></div></div>
-        </div>
-        <div id="msg2" class="msg"></div>
-      </div>
-    </div>
-    <div id="p3" class="panel">
-      <div class="card">
-        <h2>Laboratorio Visual: Propiedades en la Tabla de Cayley</h2>
-        <p style="font-size:0.9rem; color:var(--muted); margin-bottom:1rem;">
-          Pulsa cada propiedad para animar paso a paso cómo se detecta en la tabla (sobre 8 elementos representativos) o despliega la matriz completa de <b>104×104</b>:
-        </p>
-        <div class="row" style="flex-wrap:wrap; gap:0.5rem;">
-          <button class="btn" style="background:var(--accent); color:#0f172a;" onclick="animProp('interna')">1. Es Interna (Clausura)</button>
-          <button class="btn" style="background:#8b5cf6; color:#fff;" onclick="animProp('conmutativa')">2. Conmutativa (Espejo)</button>
-          <button class="btn" style="background:var(--success); color:#052e16;" onclick="animProp('neutro')">3. Neutro (id)</button>
-          <button class="btn" style="background:#ec4899; color:#fff;" onclick="animProp('absorbente')">4. Absorbente (No hay)</button>
-          <button class="btn" style="background:var(--warning); color:#0f172a;" onclick="animProp('idempotente')">5. Idempotentes (Diagonal)</button>
-          <button class="btn" style="background:#f43f5e; color:#fff;" onclick="animProp('inverso')">6. Inversos (Falla m y q)</button>
-          <button class="btn btn-gray" style="border:1px solid var(--success); color:var(--success);" onclick="renderFull104('z26')">Subgrupo ℤ₂₆ (104×104)</button>
-          <button class="btn btn-gray" style="border:1px solid var(--warning); color:var(--warning);" onclick="renderFull104('idem')">4 Idempotentes (104×104)</button>
-          <button class="btn btn-gray" onclick="renderFull104()">Ver Matriz 104×104</button>
-        </div>
-        <div id="cayleyWrap" style="max-height:400px; overflow:auto; border:1px solid var(--border); border-radius:8px; margin-top:1rem; background:#0b1120; padding:0.75rem;"></div>
-        <div id="cayleyLegend" style="display:flex; flex-wrap:wrap; justify-content:center; gap:1rem; margin-top:0.75rem; font-size:0.82rem; color:var(--muted);">
-          <span><b style="display:inline-block; width:12px; height:12px; background:#065f46; border:1px solid #10b981; vertical-align:middle; margin-right:4px;"></b>Solo cᵏ (Subgrupo ℤ₂₆ reversible)</span>
-          <span><b style="display:inline-block; width:12px; height:12px; background:#581c87; border:1px solid #a855f7; vertical-align:middle; margin-right:4px;"></b>Con q (sin m)</span>
-          <span><b style="display:inline-block; width:12px; height:12px; background:#1e3a8a; border:1px solid #38bdf8; vertical-align:middle; margin-right:4px;"></b>Con m (sin q)</span>
-          <span><b style="display:inline-block; width:12px; height:12px; background:#78350f; border:1px solid #f59e0b; vertical-align:middle; margin-right:4px;"></b>Con m ∘ q (ambos activos)</span>
-        </div>
-        <div id="msg3" class="msg ok" style="margin-top:1rem;">
-          Selecciona una propiedad arriba para ver su animación paso a paso sobre la tabla.
-        </div>
-      </div>
-    </div>
-    <!-- PESTAÑA 5: FILAS 8, 9 Y 10 (LÍMITES, CONTEXTO Y OBJETIVOS) -->
-    <div id="p4" class="panel">
-      <div class="grid">
-        <div class="card">
-          <h2>Fila 8: Límites del Modelo (Simulación en Vivo)</h2>
-          <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1rem;">
-            Prueba cómo se rompe la ofuscación por fuerza bruta o cómo cambia toda la estructura si agregamos la letra <b>«ñ»</b> o números:
-          </p>
-
-          <!-- Simulador 1: Sensibilidad al alfabeto -->
-          <div class="slider-box">
-            <strong style="color:var(--accent); display:block; margin-bottom:0.5rem;">1. Sensibilidad a nuevos caracteres (Clausura y Lagrange):</strong>
-            <div class="row" style="margin-bottom:0.5rem;">
-              <button class="btn btn-gray" onclick="setAlpha(26)">26 letras (Base)</button>
-              <button class="btn" style="background:var(--warning); color:#0f172a;" onclick="setAlpha(27)">27 letras (+ «ñ»)</button>
-              <button class="btn" style="background:var(--purple); color:#fff;" onclick="setAlpha(36)">36 chars (+ 0-9)</button>
-            </div>
-            <div id="alphaInfo" style="font-size:0.85rem; font-family:monospace; color:#e2e8f0; margin-top:0.5rem;">
-              • Período de c: <b>|c| = 26</b> | Total Monoide: <b>104 elementos</b><br>
-              • Divisores de Lagrange: <b>{1, 2, 13, 26}</b>
-            </div>
-          </div>
-
-          <!-- Simulador 2: Fuerza Bruta César -->
-          <div class="slider-box" style="margin-bottom:0;">
-            <strong style="color:var(--danger); display:block; margin-bottom:0.5rem;">2. Insuficiencia Criptográfica (Fuerza Bruta):</strong>
-            <div style="display:flex; gap:0.5rem; margin-bottom:0.5rem;">
-              <input type="text" id="cipherIn" value="Krod" style="margin:0; padding:0.5rem;" />
-              <button class="btn" style="background:var(--danger); color:#fff;" onclick="bruteForce()">Romper en 26 pasos</button>
-            </div>
-            <div id="bruteOut" style="max-height:130px; overflow:auto; font-family:monospace; font-size:0.8rem; background:#0b1120; padding:0.6rem; border-radius:6px; border:1px solid var(--border); color:var(--muted);">
-              Pulsa "Romper en 26 pasos" para probar todos los desplazamientos posibles...
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>Contexto y Objetivos de Aprendizaje</h2>
-          <div class="box-m" style="margin-bottom:1rem;">
-            <strong style="color:var(--warning);">Destinatarios y Contexto</strong>
-            <ul>
-              <li><b>Nivel:</b> 1.º / 2.º año de Ingeniería en Sistemas/Informática, Lic. en Cs. de la Computación o Prof. en Matemática.</li>
-              <li><b>Espacio Curricular:</b> Álgebra I / Matemática Discreta / Estructuras Algebraicas (Unidad III).</li>
-              <li><b>Tiempo estimado:</b> 90 a 120 minutos (clase teórico-práctica).</li>
-            </ul>
-          </div>
-
-          <div class="box-g" style="margin-top:0;">
-            <strong style="color:var(--success);">Fila 10 · Objetivos de Aprendizaje</strong>
-            <ul>
-              <li>Modelar la composición de transformaciones sobre textos (clausura, asociatividad, neutro y conmutatividad).</li>
-              <li>Justificar por qué forma un <b>monoide</b> y no un grupo (identificando pasos reversibles vs. pérdida de datos).</li>
-              <li>Analizar el grupo cíclico <b>⟨c⟩ ≅ ℤ₂₆</b>, su orden, sus 12 generadores y subgrupos.</li>
-              <li>Aplicar el <b>Teorema de Lagrange</b> y homomorfismos (núcleo e imagen).</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- PESTAÑA 6: FILAS 11, 12, 13 Y 14 (CONSIGNA, ERRORES Y RÚBRICA) -->
-   <!-- PESTAÑA 6: FILAS 13 Y 14 (ERRORES PREVISIBLES Y RÚBRICA) -->
-   <div id="p5" class="panel">
-    <div class="grid">
-      <div class="card">
-        <h2>Fila 13: Los 6 Errores Previsibles (Clic para ver solución)</h2>
-        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:0.75rem;">Haz clic en cada error común para desplegar su corrección conceptual:</p>
-        <div style="display:flex; flex-direction:column; gap:0.5rem;">
-          <button class="sim-btn" style="margin:0; padding:0.65rem;" onclick="showErr(0)"><strong style="color:var(--danger);">1. Confundir clausura con pasos básicos</strong></button>
-          <button class="sim-btn" style="margin:0; padding:0.65rem;" onclick="showErr(1)"><strong style="color:var(--danger);">2. Confundir conmutatividad con asociatividad</strong></button>
-          <button class="sim-btn" style="margin:0; padding:0.65rem;" onclick="showErr(2)"><strong style="color:var(--danger);">3. Suponer que m y q tienen inversa</strong></button>
-          <button class="sim-btn" style="margin:0; padding:0.65rem;" onclick="showErr(3)"><strong style="color:var(--danger);">4. Confundir Monoide con Grupo</strong></button>
-          <button class="sim-btn" style="margin:0; padding:0.65rem;" onclick="showErr(4)"><strong style="color:var(--danger);">5. Aplicar mal el Teorema de Lagrange</strong></button>
-          <button class="sim-btn" style="margin:0; padding:0.65rem;" onclick="showErr(5)"><strong style="color:var(--danger);">6. Confundir Núcleo con Imagen</strong></button>
-        </div>
-        <div id="errDetail" class="msg ok" style="margin-top:0.9rem;">
-          Selecciona uno de los 6 errores previsibles para ver cómo evitarlo en la evaluación.
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>Fila 14: Criterios de Corrección (100 pts)</h2>
-        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1.25rem;">
-          Distribución del puntaje de la actividad, priorizando la justificación formal y el uso de contraejemplos:
-        </p>
-        <div style="font-size:0.9rem; display:flex; flex-direction:column; gap:1rem;">
-          <div>
-            <strong>1. Composición y propiedades</strong> <span style="float:right; color:var(--accent); font-weight:bold;">25 pts</span>
-            <div style="height:8px; background:var(--bg); border-radius:4px; margin-top:4px;"><div style="width:25%; height:100%; background:var(--accent); border-radius:4px;"></div></div>
-          </div>
-          <div>
-            <strong>2. Clasificación (Monoide) e inversos</strong> <span style="float:right; color:var(--success); font-weight:bold;">25 pts</span>
-            <div style="height:8px; background:var(--bg); border-radius:4px; margin-top:4px;"><div style="width:25%; height:100%; background:var(--success); border-radius:4px;"></div></div>
-          </div>
-          <div>
-            <strong>3. Análisis del grupo cíclico ⟨c⟩</strong> <span style="float:right; color:var(--warning); font-weight:bold;">20 pts</span>
-            <div style="height:8px; background:var(--bg); border-radius:4px; margin-top:4px;"><div style="width:20%; height:100%; background:var(--warning); border-radius:4px;"></div></div>
-          </div>
-          <div>
-            <strong>4. Teorema de Lagrange (subgrupos)</strong> <span style="float:right; color:var(--purple); font-weight:bold;">15 pts</span>
-            <div style="height:8px; background:var(--bg); border-radius:4px; margin-top:4px;"><div style="width:15%; height:100%; background:var(--purple); border-radius:4px;"></div></div>
-          </div>
-          <div>
-            <strong>5. Homomorfismo (núcleo e imagen)</strong> <span style="float:right; color:var(--danger); font-weight:bold;">15 pts</span>
-            <div style="height:8px; background:var(--bg); border-radius:4px; margin-top:4px;"><div style="width:15%; height:100%; background:var(--danger); border-radius:4px;"></div></div>
-          </div>
-        </div>
-        <div class="box-g" style="margin-top:1.5rem;">
-          <strong style="color:var(--success);">Criterio General</strong>
-          <p style="font-size:0.85rem; margin-top:0.3rem;">Se evalúa especialmente la fundamentación matemática y la presentación de contraejemplos concretos (como <code>m</code> para descartar Grupo).</p>
-        </div>
-      </div>
-    </div>
+<header>
+  <div>
+    <h1>Pruebas de Caja Negra — Técnica de Transición de Estados (Udemy)</h1>
+    <p>Operación: "Buscar un curso, agregarlo al carrito y proceder al pago" | Ingeniería del Software — UNJu</p>
   </div>
+  <div class="btns">
+    <button class="cp" onclick="runCP(1)">▶ Ejecutar CP-01 (Con Login)</button>
+    <button class="cp" onclick="runCP(2)">▶ Ejecutar CP-02 (Vaciar Carrito)</button>
+    <button class="rst" onclick="reset()">↺ Reiniciar</button>
   </div>
-  <script>
-    var m = 0, q = 0, tmr = null;
-
-    function go(n) {
-      var ps = document.querySelectorAll('.panel');
-      var bs = document.querySelectorAll('.tab-btn');
-      for (var i = 0; i < ps.length; i++) {
-        ps[i].classList.toggle('active', i === n);
-        bs[i].classList.toggle('active', i === n);
+</header>
+<div class="grid">
+  <div class="card">
+    <h2>1. Acciones (Eventos)</h2>
+    <div id="ban" class="banner"><small>ESTADO ACTUAL</small><strong id="stT"></strong><div id="stD"></div></div>
+    <div id="evBox" class="evts"></div>
+    <div id="msg" class="msg">Haz clic en un botón azul para avanzar o en uno gris para probar una celda vacía.</div>
+  </div>
+  <div class="card">
+    <h2>2. Diagrama de Transición de Estados</h2>
+    <div class="svg-box"><svg id="svg" viewBox="0 0 600 440"></svg></div>
+  </div>
+  <div class="card">
+    <h2>3. Tabla Matricial (Cátedra)</h2>
+    <table id="tbl"></table>
+    <h2>Historial</h2>
+    <div id="log" class="log"></div>
+  </div>
+</div>
+<script>
+  const S = {
+    1: { n: "(1) Inicio", s: "Catálogo", d: "Página principal de Udemy con carrito vacío.", x: 80, y: 75 },
+    2: { n: "(2) Buscando", s: "Resultados", d: "Listado de cursos coincidentes con la búsqueda.", x: 300, y: 75 },
+    3: { n: "(3) Detalle", s: "del Curso", d: "Vista de temario, precio y botón 'Añadir a la cesta'.", x: 520, y: 75 },
+    4: { n: "(4) Carrito", s: "de Compras", d: "Curso agregado al carrito. Listo para pagar o vaciar.", x: 520, y: 240 },
+    5: { n: "(5) Login", s: "Autenticación", d: "Udemy exige iniciar sesión antes de ir al pago.", x: 520, y: 375 },
+    6: { n: "(6) Éxito", s: "Pantalla Pago", d: "Pasarela de pago abierta con resumen del curso.", x: 300, y: 375 },
+    7: { n: "(7) Error", s: "Fallo/Cancel", d: "Sin resultados, credenciales inválidas o cancelación.", x: 80, y: 240 }
+  };
+  const E = [
+    ["E1", "Buscar curso válido"], ["E2", "Seleccionar curso"], ["E3", "Añadir al carrito"],
+    ["E4", "Vaciar carrito"], ["E5", "Pagar (con sesión)"], ["E6", "Pagar (sin sesión)"],
+    ["E7", "Login válido"], ["E8", "Error / Cred. inválidas"], ["E9", "Volver al inicio"]
+  ];
+  const T = {
+    1: { E1: 2 }, 2: { E2: 3, E8: 7 }, 3: { E3: 4 },
+    4: { E4: 1, E5: 6, E6: 5, E8: 7 }, 5: { E7: 6, E8: 7 }, 6: { E8: 7, E9: 1 }, 7: { E9: 1 }
+  };
+  const ARCS = [
+    [1,2,"E1","M125 75 L252 75",190,65], [2,3,"E2","M345 75 L472 75",410,65],
+    [3,4,"E3","M520 120 L520 192",556,160], [4,1,"E4","M475 230 Q250 180 118 112",275,172],
+    [4,6,"E5","M475 250 L345 340",380,288], [4,5,"E6","M520 285 L520 328",556,310],
+    [5,6,"E7","M475 375 L348 375",410,365], [2,7,"E8","M270 110 L118 215",170,148],
+    [5,7,"E8","M480 395 Q250 435 98 282",280,425], [7,1,"E9","M80 195 L80 124",45,160],
+    [6,1,"E9","M265 345 Q170 250 108 118",195,265]
+  ];
+  let cur = 1, timer = null;
+  
+  function init() {
+    let th = "<tr><th>Estado \\ Ev</th>" + E.map(e => `<th>${e[0]}</th>`).join("") + "</tr>";
+    let tb = "";
+    for (let i = 1; i <= 7; i++) {
+      tb += `<tr id="r${i}"><td class="sc">${S[i].n}</td>` +
+        E.map(e => `<td id="c${i}${e[0]}">${T[i][e[0]] || ""}</td>`).join("") + "</tr>";
+    }
+    document.getElementById("tbl").innerHTML = th + tb;
+  
+    let svg = `<defs>
+      <marker id="m0" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L10 5 L0 9z" fill="#64748b"/></marker>
+      <marker id="m1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L10 5 L0 9z" fill="#22c55e"/></marker>
+      <marker id="m2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L10 5 L0 9z" fill="#ef4444"/></marker>
+    </defs>`;
+    ARCS.forEach(a => {
+      svg += `<path id="p${a[0]}${a[2]}" d="${a[3]}" stroke="#475569" stroke-width="2" fill="none" marker-end="url(#m0)"/>
+              <text x="${a[4]}" y="${a[5]}" fill="#94a3b8" font-size="10" font-weight="600" text-anchor="middle">${a[2]}</text>`;
+    });
+    for (let i = 1; i <= 7; i++) {
+      svg += `<g transform="translate(${S[i].x},${S[i].y})">
+        <circle id="n${i}" r="41" fill="#1e293b" stroke="${i===7?'#ef4444':'#38bdf8'}" stroke-width="2.5"/>
+        <text id="t1_${i}" y="-4" fill="#f8fafc" font-size="11" font-weight="700" text-anchor="middle">${S[i].n}</text>
+        <text id="t2_${i}" y="10" fill="#cbd5e1" font-size="9.5" text-anchor="middle">${S[i].s}</text>
+      </g>`;
+    }
+    document.getElementById("svg").innerHTML = svg;
+    draw();
+  }
+  
+  function draw(from, ev, to) {
+    document.getElementById("ban").className = cur === 7 ? "banner err" : "banner";
+    document.getElementById("stT").textContent = S[cur].n + " — " + S[cur].s;
+    document.getElementById("stD").textContent = S[cur].d;
+  
+    document.getElementById("evBox").innerHTML = E.map(e => {
+      const nxt = T[cur][e[0]];
+      return `<button class="ev ${nxt?'ok':'no'}" onclick="go('${e[0]}')">
+        <span><b>${e[0]}:</b> ${e[1]}</span><span class="tag">${nxt?'→ ('+nxt+')':'Vacío'}</span>
+      </button>`;
+    }).join("");
+  
+    for (let i = 1; i <= 7; i++) {
+      const c = document.getElementById("n" + i);
+      const active = i === cur;
+      c.setAttribute("fill", active ? (i === 7 ? "#ef4444" : "#22c55e") : "#1e293b");
+      c.setAttribute("stroke-width", active ? "4" : "2.5");
+      document.getElementById("t1_" + i).setAttribute("fill", active && i !== 7 ? "#052e16" : "#f8fafc");
+      document.getElementById("t2_" + i).setAttribute("fill", active && i !== 7 ? "#052e16" : "#cbd5e1");
+      document.getElementById("r" + i).className = active ? "act" : "";
+    }
+  
+    document.querySelectorAll("path[id^='p']").forEach(p => { p.setAttribute("stroke", "#475569"); p.setAttribute("stroke-width", "2"); p.setAttribute("marker-end", "url(#m0)"); });
+    document.querySelectorAll("td").forEach(td => td.classList.remove("hit", "ehit"));
+  
+    if (from && ev) {
+      const p = document.getElementById("p" + from + ev);
+      if (p) {
+        p.setAttribute("stroke", to === 7 ? "#ef4444" : "#22c55e");
+        p.setAttribute("stroke-width", "3.5");
+        p.setAttribute("marker-end", to === 7 ? "url(#m2)" : "url(#m1)");
       }
+      const cell = document.getElementById("c" + from + ev);
+      if (cell) { cell.classList.add("hit"); if (to === 7) cell.classList.add("ehit"); }
     }
-
-    function togM() {
-      m = m ? 0 : 1;
-      document.getElementById('bm').classList.toggle('on', m === 1);
-      document.getElementById('va').textContent = m;
-      runPipe();
+  }
+  
+  function go(ev) {
+    const nxt = T[cur][ev];
+    const msg = document.getElementById("msg");
+    const log = document.getElementById("log");
+    if (!nxt) {
+      msg.innerHTML = `⚠️ <b>Inválido:</b> En <b>${S[cur].n}</b> la celda <b>${ev}</b> está vacía en la matriz.`;
+      log.innerHTML = `<div>⚠️ (${cur}) + ${ev} → Celda vacía</div>` + log.innerHTML;
+      return;
     }
-
-    function togQ() {
-      q = q ? 0 : 1;
-      document.getElementById('bq').classList.toggle('on', q === 1);
-      document.getElementById('vb').textContent = q;
-      runPipe();
-    }
-
-    function shift(s, k) {
-      return s.split('').map(function(c) {
-        var x = c.charCodeAt(0);
-        if (x >= 65 && x <= 90) return String.fromCharCode(((x - 65 + k) % 26) + 65);
-        if (x >= 97 && x <= 122) return String.fromCharCode(((x - 97 + k) % 26) + 97);
-        return c;
-      }).join('');
-    }
-
-    function runPipe() {
-      var s = document.getElementById('txt').value;
-      var k = parseInt(document.getElementById('sk').value, 10);
-      document.getElementById('vk').textContent = k;
-      if (m) s = s.toLowerCase();
-      if (q) s = s.trim();
-      if (k > 0) s = shift(s, k);
-      document.getElementById('out').innerHTML = s.length ? s.replace(/ /g, '<span class="dot">•</span>') : '(vacío)';
-      var f = new Array();
-      if (m) f.push('m');
-      if (q) f.push('q');
-      if (k > 0) f.push(k === 1 ? 'c' : 'c^' + k);
-      document.getElementById('nf').textContent = f.length ? f.join(' ∘ ') : 'id';
-      document.getElementById('idx').textContent = (m * 52) + (q * 26) + k + 1;
-      document.getElementById('msg0').className = 'msg';
-    }
-
-    function undo() {
-      var k = parseInt(document.getElementById('sk').value, 10);
-      var el = document.getElementById('msg0');
-      if (!m && !q) {
-        el.className = 'msg ok';
-        el.innerHTML = k === 0
-          ? '✅ <b>Neutro (id):</b> Su inverso es él mismo (id).'
-          : '✅ <b>Reversible:</b> El inverso de <b>c^' + k + '</b> es <b>c^' + ((26 - k) % 26) + '</b>.';
-      } else {
-        el.className = 'msg err';
-        el.innerHTML = '❌ <b>Sin inverso (Monoide, no Grupo):</b> <code>m</code> ("HOLA" y "hola" → "hola") y/o <code>q</code> (" Hola " y "Hola" → "Hola") pierden información.';
-      }
-    }
-
-    function rst() {
-      m = 0;
-      q = 0;
-      document.getElementById('bm').classList.remove('on');
-      document.getElementById('bq').classList.remove('on');
-      document.getElementById('va').textContent = 0;
-      document.getElementById('vb').textContent = 0;
-      document.getElementById('sk').value = 0;
-      document.getElementById('txt').value = ' Hola ';
-      runPipe();
-    }
-
-    function draw(act, lns, col) {
-      var svg = document.getElementById('clk'), cx = 190, cy = 190, r = 150;
-      svg.innerHTML = '<circle cx="190" cy="190" r="150" fill="none" stroke="#334155" stroke-width="2"/><text x="190" y="195" text-anchor="middle" fill="#94a3b8" font-size="15" font-weight="bold">G = ⟨c⟩ ≅ ℤ₂₆</text>';
-      for (var j = 0; j < lns.length; j++) {
-        var a1 = (lns[j].a / 26) * 2 * Math.PI - Math.PI / 2;
-        var a2 = (lns[j].b / 26) * 2 * Math.PI - Math.PI / 2;
-        svg.innerHTML += '<line x1="' + (cx + r * Math.cos(a1)) + '" y1="' + (cy + r * Math.sin(a1)) + '" x2="' + (cx + r * Math.cos(a2)) + '" y2="' + (cy + r * Math.sin(a2)) + '" stroke="' + col + '" stroke-width="2.5"/>';
-      }
-      for (var i = 0; i < 26; i++) {
-        var ang = (i / 26) * 2 * Math.PI - Math.PI / 2;
-        var nx = cx + r * Math.cos(ang), ny = cy + r * Math.sin(ang);
-        var on = act.indexOf(i) !== -1;
-        var fill = i === 0 ? '#10b981' : (on ? col : '#1e293b');
-        var tc = (on || i === 0) ? '#0f172a' : '#f8fafc';
-        svg.innerHTML += '<circle cx="' + nx + '" cy="' + ny + '" r="' + (on ? 14 : 11) + '" fill="' + fill + '" stroke="#475569" stroke-width="1.5"/><text x="' + nx + '" y="' + (ny + 4) + '" text-anchor="middle" fill="' + tc + '" font-size="9.5" font-weight="bold">' + (i === 0 ? 'id' : 'c' + i) + '</text>';
-      }
-    }
-
-    function anim(step) {
-      clearInterval(tmr);
-      var cur = 0;
-      var vis = Array.of(0);
-      var lns = new Array();
-      tmr = setInterval(function() {
-        var nxt = (cur + step) % 26;
-        lns.push({ a: cur, b: nxt });
-        vis.push(nxt);
-        draw(vis, lns, '#38bdf8');
-        cur = nxt;
-        if (cur === 0) {
-          clearInterval(tmr);
-          var el = document.getElementById('msg1');
-          el.className = 'msg ok';
-          el.innerHTML = '✅ <b>Orden ' + lns.length + ':</b> Subgrupo cerrado generado por <b>c^' + step + '</b>.';
-        }
-      }, step === 1 ? 65 : 220);
-    }
-
-    function lagFail() {
-      clearInterval(tmr);
-      var nodes = Array.of(0, 6, 13, 19);
-      var lines = Array.of({ a: 0, b: 6 }, { a: 6, b: 13 }, { a: 13, b: 19 }, { a: 19, b: 0 });
-      draw(nodes, lines, '#f43f5e');
-      var el = document.getElementById('msg1');
-      el.className = 'msg err';
-      el.innerHTML = '❌ <b>Imposible por Lagrange:</b> 26 / 4 = 6.5 (no divide a 26). No existe subgrupo cerrado de 4 desplazamientos.';
-    }
-
-    function rstHomo() {
-      var p = document.getElementById('pool');
-      p.innerHTML = '';
-      document.getElementById('bEven').innerHTML = '';
-      document.getElementById('bOdd').innerHTML = '';
-      document.getElementById('msg2').className = 'msg';
-      for (var k = 0; k < 26; k++) {
-        p.innerHTML += '<span id="ch' + k + '" class="chip ' + (k % 2 === 0 ? 'c-even' : 'c-odd') + '">' + (k === 0 ? 'id' : 'c^' + k) + '</span>';
-      }
-    }
-
-    function runHomo() {
-      rstHomo();
-      var k = 0;
-      var iv = setInterval(function() {
-        if (k >= 26) {
-          clearInterval(iv);
-          var el = document.getElementById('msg2');
-          el.className = 'msg err';
-          el.innerHTML = '⚠️ <b>No es Isomorfismo:</b> El núcleo <b>ker(p)</b> tiene <b>13 elementos</b> (no solo {id}). Se pierde información.';
-          return;
-        }
-        var c = document.getElementById('ch' + k);
-        if (c) document.getElementById(k % 2 === 0 ? 'bEven' : 'bOdd').appendChild(c);
-        k++;
-      }, 50);
-    }
-
-    function getElem(idx) {
-      var a = Math.floor(idx / 52);
-      var b = Math.floor((idx % 52) / 26);
-      var k = idx % 26;
-      var parts = new Array();
-      if (a) parts.push('m');
-      if (b) parts.push('q');
-      if (k > 0) parts.push(k === 1 ? 'c' : 'c' + k);
-      return { a: a, b: b, k: k, label: parts.length ? parts.join('∘') : 'id' };
-    }
-
-    var cayleyTimer = null;
-    var sampleIdx = Array.of(0, 1, 13, 26, 27, 52, 53, 78);
-
-    function buildBaseTable() {
-      var wrap = document.getElementById('cayleyWrap');
-      var cs = 'padding:8px 10px; font-size:0.82rem; border:1px solid #334155; text-align:center; font-family:monospace; transition: all 0.25s;';
-      var html = '<table style="border-collapse:collapse; margin:auto;"><tr><th style="background:#1e293b; color:#38bdf8;' + cs + '">∘</th>';
-      for (var h = 0; h < sampleIdx.length; h++) {
-        html += '<th style="background:#1e293b; color:#f8fafc;' + cs + '">' + getElem(sampleIdx[h]).label + '</th>';
-      }
-      html += '</tr>';
-      for (var r = 0; r < sampleIdx.length; r++) {
-        var e1 = getElem(sampleIdx[r]);
-        html += '<tr><th style="background:#1e293b; color:#f8fafc;' + cs + '">' + e1.label + '</th>';
-        for (var c = 0; c < sampleIdx.length; c++) {
-          var e2 = getElem(sampleIdx[c]);
-          var ra = Math.max(e1.a, e2.a), rb = Math.max(e1.b, e2.b), rk = (e1.k + e2.k) % 26;
-          var resIdx = (ra * 52) + (rb * 26) + rk;
-          var resElem = getElem(resIdx);
-          html += '<td id="cell-' + r + '-' + c + '" data-res="' + resIdx + '" style="background:#0f172a; color:#94a3b8;' + cs + '">' + resElem.label + '</td>';
-        }
-        html += '</tr>';
-      }
-      html += '</table>';
-      wrap.innerHTML = html;
-    }
-
-    function paintCell(r, c, bg, fg) {
-      var td = document.getElementById('cell-' + r + '-' + c);
-      if (td) { td.style.background = bg; td.style.color = fg || '#ffffff'; td.style.fontWeight = 'bold'; }
-    }
-
-    function animProp(prop) {
-      clearInterval(cayleyTimer);
-      buildBaseTable();
-      var msg = document.getElementById('msg3');
-      var step = 0;
-
-      if (prop === 'interna') {
-        msg.className = 'msg ok';
-        msg.innerHTML = '⏳ <b>Verificando Clausura (Interna):</b> Escaneando fila por fila que todos los resultados pertenezcan al conjunto...';
-        cayleyTimer = setInterval(function() {
-          if (step >= 8) { clearInterval(cayleyTimer); msg.innerHTML = '✅ <b>Es Interna (Ley de Cierre):</b> Todas las celdas devuelven un paso válido del monoide (ningún elemento extraño).'; return; }
-          for (var c = 0; c < 8; c++) paintCell(step, c, '#0369a1', '#e0f2fe');
-          step++;
-        }, 180);
-      }
-
-      if (prop === 'conmutativa') {
-        msg.className = 'msg ok';
-        msg.innerHTML = '⏳ <b>Verificando Conmutatividad (Espejo):</b> Trazando diagonal y comparando pares simétricos (a∘b = b∘a)...';
-        for (var d = 0; d < 8; d++) paintCell(d, d, '#334155', '#cbd5e1');
-        var pairs = new Array();
-        for (var r = 0; r < 8; r++) { for (var c = r + 1; c < 8; c++) pairs.push({ r: r, c: c }); }
-        cayleyTimer = setInterval(function() {
-          if (step >= pairs.length) { clearInterval(cayleyTimer); msg.innerHTML = '✅ <b>Es Conmutativa:</b> La tabla es un espejo perfecto respecto a la diagonal principal (por ejemplo: <code>m∘c = c∘m</code>).'; return; }
-          var p = pairs[step];
-          paintCell(p.r, p.c, '#6d28d9', '#ede9fe');
-          paintCell(p.c, p.r, '#7c3aed', '#ede9fe');
-          step++;
-        }, 110);
-      }
-
-      if (prop === 'neutro') {
-        msg.className = 'msg ok';
-        msg.innerHTML = '⏳ <b>Buscando Elemento Neutro:</b> Comparando la Fila 0 y Columna 0 contra los encabezados...';
-        cayleyTimer = setInterval(function() {
-          if (step >= 8) { clearInterval(cayleyTimer); msg.innerHTML = '✅ <b>Elemento Neutro = id:</b> Su fila y su columna copian exactamente los encabezados sin alterar ningún paso.'; return; }
-          paintCell(0, step, '#047857', '#d1fae5');
-          paintCell(step, 0, '#047857', '#d1fae5');
-          step++;
-        }, 180);
-      }
-
-      if (prop === 'absorbente') {
-        msg.className = 'msg err';
-        msg.innerHTML = '⏳ <b>Buscando Elemento Absorbente:</b> Revisando si alguna fila repite siempre el mismo resultado...';
-        cayleyTimer = setInterval(function() {
-          if (step >= 8) { clearInterval(cayleyTimer); msg.innerHTML = '❌ <b>No existe Absorbente:</b> Incluso en la última fila (<code>m∘q</code>), los resultados siguen cambiando según el desplazamiento <code>cᵏ</code>.'; return; }
-          paintCell(7, step, '#be185d', '#fce7f3');
-          step++;
-        }, 180);
-      }
-
-      if (prop === 'idempotente') {
-        msg.className = 'msg ok';
-        msg.innerHTML = '⏳ <b>Revisando Diagonal Principal (x ∘ x = x):</b> Buscando qué elementos se devuelven a sí mismos...';
-        cayleyTimer = setInterval(function() {
-          if (step >= 8) { clearInterval(cayleyTimer); msg.innerHTML = '⚠️ <b>Solo 4 Idempotentes en todo el sistema:</b> <code>id, q, m, m∘q</code> (en dorado). Los que tienen desplazamiento <code>cᵏ</code> cambian (en gris).'; return; }
-          var idx = sampleIdx[step];
-          var isIdem = (idx % 26 === 0);
-          paintCell(step, step, isIdem ? '#d97706' : '#334155', isIdem ? '#fef3c7' : '#94a3b8');
-          step++;
-        }, 220);
-      }
-
-      if (prop === 'inverso') {
-        msg.className = 'msg err';
-        msg.innerHTML = '⏳ <b>Buscando el Neutro (id) en cada fila:</b> Si una fila no tiene <code>id</code>, ese paso no se puede deshacer...';
-        cayleyTimer = setInterval(function() {
-          if (step >= 8) { clearInterval(cayleyTimer); msg.innerHTML = '❌ <b>Falla el Inverso (Es Monoide, no Grupo):</b> Solo las primeras 3 filas (los <code>cᵏ</code>) contienen a <code>id</code> en verde. Las filas con <code>m</code> o <code>q</code> (en rojo) jamás vuelven a <code>id</code>.'; return; }
-          var hasId = (sampleIdx[step] < 26);
-          for (var c = 0; c < 8; c++) {
-            var td = document.getElementById('cell-' + step + '-' + c);
-            if (td && td.getAttribute('data-res') === '0') paintCell(step, c, '#059669', '#ecfdf5');
-            else if (!hasId) paintCell(step, c, '#9f1239', '#ffe4e6');
-          }
-          step++;
-        }, 240);
-      }
-    }
-
-    function renderFull104(mode) {
-      mode = mode || 'all';
-      clearInterval(cayleyTimer);
-      var wrap = document.getElementById('cayleyWrap');
-      var msg = document.getElementById('msg3');
-      var html = '<table style="border-collapse:collapse; margin:auto;">';
-      for (var r = 0; r < 104; r++) {
-        var e1 = getElem(r);
-        html += '<tr>';
-        for (var c = 0; c < 104; c++) {
-          var e2 = getElem(c);
-          var ra = Math.max(e1.a, e2.a), rb = Math.max(e1.b, e2.b), rk = (e1.k + e2.k) % 26;
-          var resIdx = (ra * 52) + (rb * 26) + rk;
-          var resElem = getElem(resIdx);
-          var bg = (ra === 0 && rb === 0) ? '#065f46' : (ra === 1 && rb === 0) ? '#1e3a8a' : (ra === 0 && rb === 1) ? '#581c87' : '#78350f';
-
-          if (mode === 'z26' && (ra !== 0 || rb !== 0)) bg = '#0f172a';
-          if (mode === 'idem') {
-            var isIdem = (r === c) && (resIdx === r);
-            bg = isIdem ? '#f59e0b' : '#0f172a';
-          }
-
-          html += '<td title="' + e1.label + ' ∘ ' + e2.label + ' = ' + resElem.label + '" style="width:6px; height:6px; background:' + bg + '; border:1px solid #0f172a;"></td>';
-        }
-        html += '</tr>';
-      }
-      html += '</table>';
-      wrap.innerHTML = html;
-      msg.className = 'msg ok';
-      if (mode === 'z26') {
-        msg.innerHTML = '🟢 <b>Subgrupo Reversible ℤ₂₆ (26×26):</b> Encerrado arriba a la izquierda en verde; operar dos desplazamientos nunca sale de este bloque (clausura de subgrupo).';
-      } else if (mode === 'idem') {
-        msg.innerHTML = '🟡 <b>Los 4 Idempotentes en la matriz 104×104:</b> Solo <code>id</code>, <code>q</code>, <code>m</code> y <code>m∘q</code> cumplen <code>x ∘ x = x</code> en toda la diagonal principal.';
-      } else {
-        msg.innerHTML = '📊 <b>Matriz Completa (104×104 = 10.816 celdas):</b> En verde arriba a la izquierda el subgrupo <b>ℤ₂₆</b>; los otros 3 bloques absorben hacia pasos con <code>m</code> y <code>q</code>.';
-      }
-    }
-
-
-    runPipe();
-    draw(new Array(), new Array(), '#38bdf8');
-    rstHomo();
-    animProp('interna');
-     // --- LÓGICA PESTAÑAS 5 Y 6 (FILAS 8 A 14) ---
-     function setAlpha(n) {
-      var divs = new Array();
-      for (var d = 1; d <= n; d++) {
-        if (n % d === 0) divs.push(d);
-      }
-      var total = 2 * 2 * n;
-      var note = n === 26
-        ? 'Modelo original (sin ñ ni números).'
-        : (n === 27 ? 'Con «ñ»: 27 es impar, desaparece el subgrupo de orden 2 (ROT13)!' : 'Alfanumérico: cambia el período a 36 y aparecen 9 divisores.');
-      document.getElementById('alphaInfo').innerHTML =
-        '• Período de c: <b>|c| = ' + n + '</b> | Total Monoide: <b>' + total + ' elementos</b><br>' +
-        '• Divisores de Lagrange: <b>{' + divs.join(', ') + '}</b><br>' +
-        '<span style="color:var(--warning);">' + note + '</span>';
-    }
-
-    function bruteForce() {
-      var txt = document.getElementById('cipherIn').value || 'Krod';
-      var out = document.getElementById('bruteOut');
-      var lines = new Array();
-      for (var k = 0; k < 26; k++) {
-        var decoded = shift(txt, (26 - k) % 26);
-        var highlight = (decoded.toLowerCase() === 'hola') ? ' style="color:#10b981; font-weight:bold;"' : '';
-        lines.push('<div' + highlight + '>k=' + k + ': ' + decoded + (highlight ? ' ← ¡DESCIFRADO!' : '') + '</div>');
-      }
-      out.innerHTML = lines.join('');
-    }
-
-    var errTexts = Array.of(
-      '✅ <b>Clausura vs. Generadores:</b> Combinar dos pasos básicos (como <code>m</code> y <code>c</code>) da <code>m∘c</code>, que no es uno de los 4 iniciales pero sí pertenece al conjunto de 104 combinaciones generado por ellos.',
-      '✅ <b>Conmutatividad vs. Asociatividad:</b> Conmutar es cambiar el orden (<code>a∘b = b∘a</code>); asociar es cambiar la agrupación de paréntesis (<code>(a∘b)∘c = a∘(b∘c)</code>) manteniendo la secuencia.',
-      '✅ <b>Pérdida de información:</b> Ni <code>m</code> ni <code>q</code> son inyectivas. Distintas entradas (<code>"HOLA"</code> y <code>"hola"</code>) producen la misma salida, haciendo imposible recuperar el original con una función inversa.',
-      '✅ <b>Monoide vs. Grupo:</b> Tener clausura, asociatividad y neutro alcanza para ser <b>Monoide</b>. Para ser <b>Grupo</b> se exige además que <i>todos</i> los elementos tengan inverso.',
-      '✅ <b>Teorema de Lagrange:</b> El orden de todo subgrupo divide al orden del grupo (26). Como <code>4 ∤ 26</code>, no existe subgrupo de 4 elementos. Además, el recíproco no vale en grupos generales (sí en cíclicos).',
-      '✅ <b>Núcleo vs. Imagen:</b> La imagen son los resultados posibles en el codominio (<code>ℤ₂ = {0, 1}</code>). El núcleo (<code>ker</code>) son los elementos del dominio que van a parar al neutro del codominio (los 13 desplazamientos pares).'
-    );
-
-    function showErr(idx) {
-      var el = document.getElementById('errDetail');
-      el.className = 'msg ok';
-      el.innerHTML = errTexts.at(idx);
-    }
+    const prev = cur;
+    cur = nxt;
+    msg.innerHTML = `✅ <b>Transición:</b> (${prev}) + <b>${ev}</b> → <b>${S[cur].n}</b>`;
+    log.innerHTML = `<div>• (${prev}) ──[${ev}]──► (${cur}) ${S[cur].n}</div>` + log.innerHTML;
+    draw(prev, ev, cur);
+  }
+  
+  function reset() {
+    clearInterval(timer);
+    cur = 1;
+    document.getElementById("msg").innerHTML = "🔄 Reiniciado en <b>(1) Inicio</b>.";
+    document.getElementById("log").innerHTML = "<div>• Inicio en Estado (1).</div>";
+    draw();
+  }
+  
+  function runCP(n) {
+    reset();
+    const seq = n === 1 ? ["E1", "E2", "E3", "E6", "E7"] : ["E1", "E2", "E3", "E4"];
+    let k = 0;
+    timer = setInterval(() => {
+      if (k >= seq.length) { clearInterval(timer); document.getElementById("msg").innerHTML = `🏁 <b>CP-0${n} completado</b> en ${S[cur].n}.`; return; }
+      go(seq[k++]);
+    }, 1200);
+  }
+  init();
   </script>
-</body>
-</html>
+  </body>
+  </html>
+  
