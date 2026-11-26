@@ -2,130 +2,140 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Simulador Transición de Estados - Udemy | UNJu</title>
+<title>Simulador Transición de Estados (11 Estados) - Udemy | UNJu</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-  body { background: #0f172a; color: #f8fafc; padding: 10px; display: flex; flex-direction: column; gap: 10px; height: 100vh; }
-  header { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; }
-  header h1 { font-size: 1rem; color: #38bdf8; }
-  header p { font-size: 0.78rem; color: #94a3b8; }
-  .btns { display: flex; gap: 8px; }
-  button { border: none; border-radius: 6px; padding: 7px 12px; font-weight: 600; cursor: pointer; font-size: 0.78rem; transition: 0.2s; }
+  body { background: #0f172a; color: #f8fafc; padding: 8px; display: flex; flex-direction: column; gap: 8px; height: 100vh; }
+  header { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 8px 14px; display: flex; justify-content: space-between; align-items: center; }
+  header h1 { font-size: 0.98rem; color: #38bdf8; }
+  header p { font-size: 0.75rem; color: #94a3b8; }
+  .btns { display: flex; gap: 6px; }
+  button { border: none; border-radius: 5px; padding: 6px 10px; font-weight: 600; cursor: pointer; font-size: 0.75rem; transition: 0.2s; }
   .cp { background: #a435f0; color: #fff; }
   .cp:hover { filter: brightness(1.15); }
   .rst { background: #475569; color: #fff; }
-  .grid { display: grid; grid-template-columns: 270px 1.1fr 1.1fr; gap: 10px; flex: 1; min-height: 0; }
-  .card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
-  .card h2 { font-size: 0.85rem; color: #38bdf8; border-bottom: 1px solid #334155; padding-bottom: 5px; text-transform: uppercase; }
-  .banner { background: #0f172a; border-left: 4px solid #22c55e; padding: 8px; border-radius: 5px; }
+  .grid { display: grid; grid-template-columns: 250px 1.25fr 1.15fr; gap: 8px; flex: 1; min-height: 0; }
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 8px; display: flex; flex-direction: column; gap: 6px; overflow: hidden; }
+  .card h2 { font-size: 0.8rem; color: #38bdf8; border-bottom: 1px solid #334155; padding-bottom: 4px; text-transform: uppercase; }
+  .banner { background: #0f172a; border-left: 4px solid #22c55e; padding: 6px 8px; border-radius: 5px; }
   .banner.err { border-left-color: #ef4444; }
-  .banner small { color: #94a3b8; font-size: 0.7rem; display: block; }
-  .banner strong { font-size: 0.9rem; }
-  .banner div { font-size: 0.75rem; color: #cbd5e1; margin-top: 2px; }
-  .evts { display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
-  .ev { background: #0f172a; color: #f8fafc; border: 1px solid #334155; padding: 6px 9px; text-align: left; display: flex; justify-content: space-between; align-items: center; }
-  .ev.ok { border-color: #38bdf8; background: rgba(56,189,248,0.15); }
-  .ev.ok:hover { background: rgba(56,189,248,0.3); }
-  .ev.no { opacity: 0.45; }
-  .tag { font-size: 0.68rem; padding: 2px 5px; border-radius: 4px; background: #334155; }
+  .banner small { color: #94a3b8; font-size: 0.65rem; display: block; }
+  .banner strong { font-size: 0.85rem; }
+  .evts { display: flex; flex-direction: column; gap: 3px; overflow-y: auto; flex: 1; }
+  .ev { background: #0f172a; color: #f8fafc; border: 1px solid #334155; padding: 4px 8px; text-align: left; display: flex; justify-content: space-between; align-items: center; font-size: 0.73rem; }
+  .ev.ok { border-color: #38bdf8; background: rgba(56,189,248,0.16); }
+  .ev.ok:hover { background: rgba(56,189,248,0.32); }
+  .ev.no { opacity: 0.4; }
+  .tag { font-size: 0.65rem; padding: 1px 5px; border-radius: 4px; background: #334155; }
   .ok .tag { background: #38bdf8; color: #0f172a; }
-  .msg { font-size: 0.75rem; padding: 7px; border-radius: 5px; background: rgba(245,158,11,0.15); border: 1px solid #f59e0b; color: #fde68a; min-height: 40px; }
+  .msg { font-size: 0.72rem; padding: 6px; border-radius: 5px; background: rgba(245,158,11,0.15); border: 1px solid #f59e0b; color: #fde68a; min-height: 36px; }
   .svg-box { flex: 1; background: #0b1120; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
   svg { width: 100%; height: 100%; }
-  table { width: 100%; border-collapse: collapse; font-size: 0.74rem; text-align: center; }
-  th, td { border: 1px solid #334155; padding: 6px 3px; }
+  .tbl-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.67rem; text-align: center; }
+  th, td { border: 1px solid #334155; padding: 4px 2px; }
   th { background: #0f172a; color: #38bdf8; }
-  td.sc { text-align: left; font-weight: 600; background: #0f172a; padding-left: 6px; }
-  tr.act td { background: rgba(56,189,248,0.15); }
+  td.sc { text-align: left; font-weight: 600; background: #0f172a; padding-left: 4px; white-space: nowrap; }
+  tr.act td { background: rgba(56,189,248,0.16); }
   tr.act td.sc { color: #22c55e; border-left: 3px solid #22c55e; }
   td.hit { background: #22c55e !important; color: #052e16 !important; font-weight: 800; }
   td.hit.ehit { background: #ef4444 !important; color: #fff !important; }
-  .log { background: #0f172a; border: 1px solid #334155; border-radius: 5px; padding: 7px; font-size: 0.74rem; color: #cbd5e1; flex: 1; overflow-y: auto; }
+  .log { background: #0f172a; border: 1px solid #334155; border-radius: 5px; padding: 6px; font-size: 0.7rem; color: #cbd5e1; flex: 1; overflow-y: auto; }
   .log div { border-bottom: 1px dashed #1e293b; padding: 2px 0; }
 </style>
 </head>
 <body>
 <header>
   <div>
-    <h1>Pruebas de Caja Negra — Técnica de Transición de Estados (Udemy)</h1>
-    <p>Operación: "Buscar un curso, agregarlo al carrito y proceder al pago" | Ingeniería del Software — UNJu</p>
+    <h1>Pruebas de Caja Negra — Transición de Estados (Udemy - 11 Estados)</h1>
+    <p>Operación: "Buscar un curso, agregarlo al carrito y proceder al pago" | Grupo 02 — Ingeniería del Software</p>
   </div>
   <div class="btns">
-    <button class="cp" onclick="runCP(1)">▶ Ejecutar CP-01 (Con Login)</button>
-    <button class="cp" onclick="runCP(2)">▶ Ejecutar CP-02 (Vaciar Carrito)</button>
+    <button class="cp" onclick="runCP(1)">▶ CP-01 (Éxito c/Login)</button>
+    <button class="cp" onclick="runCP(2)">▶ CP-02 (Pago Rechazado)</button>
     <button class="rst" onclick="reset()">↺ Reiniciar</button>
   </div>
 </header>
 <div class="grid">
   <div class="card">
-    <h2>1. Acciones (Eventos)</h2>
-    <div id="ban" class="banner"><small>ESTADO ACTUAL</small><strong id="stT"></strong><div id="stD"></div></div>
+    <h2>1. Eventos del Usuario</h2>
+    <div id="ban" class="banner"><small>ESTADO ACTUAL</small><strong id="stT"></strong></div>
     <div id="evBox" class="evts"></div>
-    <div id="msg" class="msg">Haz clic en un botón azul para avanzar o en uno gris para probar una celda vacía.</div>
+    <div id="msg" class="msg">Haz clic en un evento azul para avanzar o en uno gris para probar una celda vacía.</div>
   </div>
   <div class="card">
     <h2>2. Diagrama de Transición de Estados</h2>
-    <div class="svg-box"><svg id="svg" viewBox="0 0 600 440"></svg></div>
+    <div class="svg-box"><svg id="svg" viewBox="0 0 880 390"></svg></div>
   </div>
   <div class="card">
-    <h2>3. Tabla Matricial (Cátedra)</h2>
-    <table id="tbl"></table>
+    <h2>3. Tabla Matricial (11 Estados × 14 Eventos)</h2>
+    <div class="tbl-wrap"><table id="tbl"></table></div>
     <h2>Historial</h2>
     <div id="log" class="log"></div>
   </div>
 </div>
 <script>
   const S = {
-    1: { n: "(1) Inicio", s: "Catálogo", d: "Página principal de Udemy con carrito vacío.", x: 80, y: 75 },
-    2: { n: "(2) Buscando", s: "Resultados", d: "Listado de cursos coincidentes con la búsqueda.", x: 300, y: 75 },
-    3: { n: "(3) Detalle", s: "del Curso", d: "Vista de temario, precio y botón 'Añadir a la cesta'.", x: 520, y: 75 },
-    4: { n: "(4) Carrito", s: "de Compras", d: "Curso agregado al carrito. Listo para pagar o vaciar.", x: 520, y: 240 },
-    5: { n: "(5) Login", s: "Autenticación", d: "Udemy exige iniciar sesión antes de ir al pago.", x: 520, y: 375 },
-    6: { n: "(6) Éxito", s: "Pantalla Pago", d: "Pasarela de pago abierta con resumen del curso.", x: 300, y: 375 },
-    7: { n: "(7) Error", s: "Fallo/Cancel", d: "Sin resultados, credenciales inválidas o cancelación.", x: 80, y: 240 }
+    1: { n: "(1) Pantalla inicio", l1: "(1) Pantalla", l2: "de inicio", x: 55, y: 195 },
+    2: { n: "(2) Buscando cursos", l1: "(2) Buscando", l2: "cursos", x: 170, y: 195 },
+    3: { n: "(3) Visualizando curso", l1: "(3) Visualiz.", l2: "curso", x: 285, y: 195 },
+    4: { n: "(4) Agregado carrito", l1: "(4) Agregado", l2: "al carrito", x: 400, y: 195 },
+    5: { n: "(5) Verificando carrito", l1: "(5) Verific.", l2: "carrito", x: 515, y: 195 },
+    6: { n: "(6) Login autentif.", l1: "(6) Login", l2: "autentif.", x: 605, y: 115 },
+    7: { n: "(7) Datos de pago", l1: "(7) Datos", l2: "de pago", x: 695, y: 195 },
+    8: { n: "(8) Procesando pago", l1: "(8) Proces.", l2: "pago", x: 815, y: 195 },
+    9: { n: "(9) Registrando compra", l1: "(9) Registr.", l2: "compra", x: 815, y: 335 },
+    10:{ n: "(10) Finalizado éxito", l1: "(10) Finaliz.", l2: "éxito", x: 695, y: 335 },
+    11:{ n: "(11) Finalizado error", l1: "(11) Finaliz.", l2: "error", x: 445, y: 60 }
   };
   const E = [
-    ["E1", "Buscar curso válido"], ["E2", "Seleccionar curso"], ["E3", "Añadir al carrito"],
-    ["E4", "Vaciar carrito"], ["E5", "Pagar (con sesión)"], ["E6", "Pagar (sin sesión)"],
-    ["E7", "Login válido"], ["E8", "Error / Cred. inválidas"], ["E9", "Volver al inicio"]
+    ["E1","Ingresar curso"],["E2","Seleccionar curso"],["E3","Curso no encont."],
+    ["E4","Agregar carrito"],["E5","Revisar carrito"],["E6","Carrito vacío"],
+    ["E7","Logearse"],["E8","Proceder pago"],["E9","Confirmar pago"],
+    ["E10","Datos inválidos"],["E11","Pago rechazado"],["E12","Pago aprobado"],
+    ["E13","Finalizar oper."],["E14","Regresar inicio"]
   ];
   const T = {
-    1: { E1: 2 }, 2: { E2: 3, E8: 7 }, 3: { E3: 4 },
-    4: { E4: 1, E5: 6, E6: 5, E8: 7 }, 5: { E7: 6, E8: 7 }, 6: { E8: 7, E9: 1 }, 7: { E9: 1 }
+    1:{E1:2}, 2:{E2:3,E3:11}, 3:{E4:4}, 4:{E5:5},
+    5:{E6:11,E7:6,E8:7}, 6:{E8:7}, 7:{E9:8},
+    8:{E10:1,E11:11,E12:9}, 9:{E13:10}, 10:{E14:1}, 11:{E14:1}
   };
   const ARCS = [
-    [1,2,"E1","M125 75 L252 75",190,65], [2,3,"E2","M345 75 L472 75",410,65],
-    [3,4,"E3","M520 120 L520 192",556,160], [4,1,"E4","M475 230 Q250 180 118 112",275,172],
-    [4,6,"E5","M475 250 L345 340",380,288], [4,5,"E6","M520 285 L520 328",556,310],
-    [5,6,"E7","M475 375 L348 375",410,365], [2,7,"E8","M270 110 L118 215",170,148],
-    [5,7,"E8","M480 395 Q250 435 98 282",280,425], [7,1,"E9","M80 195 L80 124",45,160],
-    [6,1,"E9","M265 345 Q170 250 108 118",195,265]
+    [1,2,"E1","M91 195 L132 195",112,188],[2,3,"E2","M206 195 L247 195",227,188],
+    [2,11,"E3","M190 165 L408 72",285,112],[3,4,"E4","M321 195 L362 195",342,188],
+    [4,5,"E5","M436 195 L477 195",457,188],[5,11,"E6","M498 162 L462 94",496,130],
+    [5,6,"E7","M542 168 L578 138",545,146],[5,7,"E8","M551 195 L657 195",605,208],
+    [6,7,"E8","M632 140 L668 170",665,148],[7,8,"E9","M731 195 L777 195",755,188],
+    [8,1,"E10","M815 159 L815 20 L55 20 L55 157",440,14],
+    [8,11,"E11","M785 170 L482 68",665,98],[8,9,"E12","M815 231 L815 297",842,266],
+    [9,10,"E13","M779 335 L733 335",756,328],[10,1,"E14","M659 335 L55 335 L55 233",350,328],
+    [11,1,"E14","M409 60 L75 60 L75 158",220,53]
   ];
   let cur = 1, timer = null;
   
   function init() {
-    let th = "<tr><th>Estado \\ Ev</th>" + E.map(e => `<th>${e[0]}</th>`).join("") + "</tr>";
+    let th = "<tr><th>Est\\Ev</th>" + E.map(e => `<th>${e}</th>`).join("") + "</tr>";
     let tb = "";
-    for (let i = 1; i <= 7; i++) {
+    for (let i = 1; i <= 11; i++) {
       tb += `<tr id="r${i}"><td class="sc">${S[i].n}</td>` +
-        E.map(e => `<td id="c${i}${e[0]}">${T[i][e[0]] || ""}</td>`).join("") + "</tr>";
+        E.map(e => `<td id="c${i}${e}">${T[i][e] || ""}</td>`).join("") + "</tr>";
     }
     document.getElementById("tbl").innerHTML = th + tb;
   
     let svg = `<defs>
-      <marker id="m0" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L10 5 L0 9z" fill="#64748b"/></marker>
-      <marker id="m1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L10 5 L0 9z" fill="#22c55e"/></marker>
-      <marker id="m2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L10 5 L0 9z" fill="#ef4444"/></marker>
+      <marker id="m0" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 1 L10 5 L0 9z" fill="#64748b"/></marker>
+      <marker id="m1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 1 L10 5 L0 9z" fill="#22c55e"/></marker>
+      <marker id="m2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 1 L10 5 L0 9z" fill="#ef4444"/></marker>
     </defs>`;
     ARCS.forEach(a => {
-      svg += `<path id="p${a[0]}${a[2]}" d="${a[3]}" stroke="#475569" stroke-width="2" fill="none" marker-end="url(#m0)"/>
-              <text x="${a[4]}" y="${a[5]}" fill="#94a3b8" font-size="10" font-weight="600" text-anchor="middle">${a[2]}</text>`;
+      svg += `<path id="p${a}${a}" d="${a}" stroke="#475569" stroke-width="1.7" fill="none" marker-end="url(#m0)"/>
+              <text x="${a}" y="${a}" fill="#94a3b8" font-size="9" font-weight="600" text-anchor="middle">${a}</text>`;
     });
-    for (let i = 1; i <= 7; i++) {
+    for (let i = 1; i <= 11; i++) {
       svg += `<g transform="translate(${S[i].x},${S[i].y})">
-        <circle id="n${i}" r="41" fill="#1e293b" stroke="${i===7?'#ef4444':'#38bdf8'}" stroke-width="2.5"/>
-        <text id="t1_${i}" y="-4" fill="#f8fafc" font-size="11" font-weight="700" text-anchor="middle">${S[i].n}</text>
-        <text id="t2_${i}" y="10" fill="#cbd5e1" font-size="9.5" text-anchor="middle">${S[i].s}</text>
+        <circle id="n${i}" r="35" fill="#1e293b" stroke="${i===11?'#ef4444':'#38bdf8'}" stroke-width="2.2"/>
+        <text id="t1_${i}" y="-3" fill="#f8fafc" font-size="9.5" font-weight="700" text-anchor="middle">${S[i].l1}</text>
+        <text id="t2_${i}" y="9" fill="#cbd5e1" font-size="9" text-anchor="middle">${S[i].l2}</text>
       </g>`;
     }
     document.getElementById("svg").innerHTML = svg;
@@ -133,39 +143,36 @@
   }
   
   function draw(from, ev, to) {
-    document.getElementById("ban").className = cur === 7 ? "banner err" : "banner";
-    document.getElementById("stT").textContent = S[cur].n + " — " + S[cur].s;
-    document.getElementById("stD").textContent = S[cur].d;
-  
+    document.getElementById("ban").className = cur === 11 ? "banner err" : "banner";
+    document.getElementById("stT").textContent = S[cur].n;
     document.getElementById("evBox").innerHTML = E.map(e => {
-      const nxt = T[cur][e[0]];
-      return `<button class="ev ${nxt?'ok':'no'}" onclick="go('${e[0]}')">
-        <span><b>${e[0]}:</b> ${e[1]}</span><span class="tag">${nxt?'→ ('+nxt+')':'Vacío'}</span>
+      const nxt = T[cur][e];
+      return `<button class="ev ${nxt?'ok':'no'}" onclick="go('${e}')">
+        <span><b>${e}:</b> ${e}</span><span class="tag">${nxt?'→('+nxt+')':'—'}</span>
       </button>`;
     }).join("");
   
-    for (let i = 1; i <= 7; i++) {
+    for (let i = 1; i <= 11; i++) {
       const c = document.getElementById("n" + i);
-      const active = i === cur;
-      c.setAttribute("fill", active ? (i === 7 ? "#ef4444" : "#22c55e") : "#1e293b");
-      c.setAttribute("stroke-width", active ? "4" : "2.5");
-      document.getElementById("t1_" + i).setAttribute("fill", active && i !== 7 ? "#052e16" : "#f8fafc");
-      document.getElementById("t2_" + i).setAttribute("fill", active && i !== 7 ? "#052e16" : "#cbd5e1");
-      document.getElementById("r" + i).className = active ? "act" : "";
+      const act = i === cur;
+      c.setAttribute("fill", act ? (i === 11 ? "#ef4444" : "#22c55e") : "#1e293b");
+      c.setAttribute("stroke-width", act ? "3.8" : "2.2");
+      document.getElementById("t1_" + i).setAttribute("fill", act && i !== 11 ? "#052e16" : "#f8fafc");
+      document.getElementById("t2_" + i).setAttribute("fill", act && i !== 11 ? "#052e16" : "#cbd5e1");
+      document.getElementById("r" + i).className = act ? "act" : "";
     }
-  
-    document.querySelectorAll("path[id^='p']").forEach(p => { p.setAttribute("stroke", "#475569"); p.setAttribute("stroke-width", "2"); p.setAttribute("marker-end", "url(#m0)"); });
+    document.querySelectorAll("path[id^='p']").forEach(p => { p.setAttribute("stroke", "#475569"); p.setAttribute("stroke-width", "1.7"); p.setAttribute("marker-end", "url(#m0)"); });
     document.querySelectorAll("td").forEach(td => td.classList.remove("hit", "ehit"));
   
     if (from && ev) {
       const p = document.getElementById("p" + from + ev);
       if (p) {
-        p.setAttribute("stroke", to === 7 ? "#ef4444" : "#22c55e");
-        p.setAttribute("stroke-width", "3.5");
-        p.setAttribute("marker-end", to === 7 ? "url(#m2)" : "url(#m1)");
+        p.setAttribute("stroke", to === 11 ? "#ef4444" : "#22c55e");
+        p.setAttribute("stroke-width", "3.2");
+        p.setAttribute("marker-end", to === 11 ? "url(#m2)" : "url(#m1)");
       }
       const cell = document.getElementById("c" + from + ev);
-      if (cell) { cell.classList.add("hit"); if (to === 7) cell.classList.add("ehit"); }
+      if (cell) { cell.classList.add("hit"); if (to === 11) cell.classList.add("ehit"); }
     }
   }
   
@@ -174,33 +181,34 @@
     const msg = document.getElementById("msg");
     const log = document.getElementById("log");
     if (!nxt) {
-      msg.innerHTML = `⚠️ <b>Inválido:</b> En <b>${S[cur].n}</b> la celda <b>${ev}</b> está vacía en la matriz.`;
-      log.innerHTML = `<div>⚠️ (${cur}) + ${ev} → Celda vacía</div>` + log.innerHTML;
+      msg.innerHTML = `⚠️ <b>Celda vacía:</b> Desde <b>${S[cur].n}</b> no aplica <b>${ev}</b>.`;
+      log.innerHTML = `<div>⚠️ (${cur}) + ${ev} → Vacío</div>` + log.innerHTML;
       return;
     }
     const prev = cur;
     cur = nxt;
-    msg.innerHTML = `✅ <b>Transición:</b> (${prev}) + <b>${ev}</b> → <b>${S[cur].n}</b>`;
+    msg.innerHTML = `✅ <b>(${prev})</b> + <b>${ev}</b> → <b>${S[cur].n}</b>`;
     log.innerHTML = `<div>• (${prev}) ──[${ev}]──► (${cur}) ${S[cur].n}</div>` + log.innerHTML;
     draw(prev, ev, cur);
   }
   
   function reset() {
-    clearInterval(timer);
-    cur = 1;
-    document.getElementById("msg").innerHTML = "🔄 Reiniciado en <b>(1) Inicio</b>.";
+    clearInterval(timer); cur = 1;
+    document.getElementById("msg").innerHTML = "🔄 Reiniciado en <b>(1) Pantalla inicio</b>.";
     document.getElementById("log").innerHTML = "<div>• Inicio en Estado (1).</div>";
     draw();
   }
   
   function runCP(n) {
     reset();
-    const seq = n === 1 ? ["E1", "E2", "E3", "E6", "E7"] : ["E1", "E2", "E3", "E4"];
+    const seq = n === 1
+      ? ["E1","E2","E4","E5","E7","E8","E9","E12","E13"] // Éxito completo con login
+      : ["E1","E2","E4","E5","E8","E9","E11","E14"];     // Pago rechazado -> Error -> Inicio
     let k = 0;
     timer = setInterval(() => {
-      if (k >= seq.length) { clearInterval(timer); document.getElementById("msg").innerHTML = `🏁 <b>CP-0${n} completado</b> en ${S[cur].n}.`; return; }
+      if (k >= seq.length) { clearInterval(timer); document.getElementById("msg").innerHTML = `🏁 <b>CP-0${n} finalizado</b> en ${S[cur].n}.`; return; }
       go(seq[k++]);
-    }, 1200);
+    }, 1050);
   }
   init();
   </script>
