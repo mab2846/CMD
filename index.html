@@ -114,11 +114,11 @@
   let cur = 1, timer = null;
   
   function init() {
-    let th = "<tr><th>Est\\Ev</th>" + E.map(e => `<th>${e}</th>`).join("") + "</tr>";
+    let th = "<tr><th>Est\\Ev</th>" + E.map(e => `<th>${e[0]}</th>`).join("") + "</tr>";
     let tb = "";
     for (let i = 1; i <= 11; i++) {
       tb += `<tr id="r${i}"><td class="sc">${S[i].n}</td>` +
-        E.map(e => `<td id="c${i}${e}">${T[i][e] || ""}</td>`).join("") + "</tr>";
+        E.map(e => `<td id="c${i}${e[0]}">${T[i][e[0]] || ""}</td>`).join("") + "</tr>";
     }
     document.getElementById("tbl").innerHTML = th + tb;
   
@@ -128,8 +128,8 @@
       <marker id="m2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 1 L10 5 L0 9z" fill="#ef4444"/></marker>
     </defs>`;
     ARCS.forEach(a => {
-      svg += `<path id="p${a}${a}" d="${a}" stroke="#475569" stroke-width="1.7" fill="none" marker-end="url(#m0)"/>
-              <text x="${a}" y="${a}" fill="#94a3b8" font-size="9" font-weight="600" text-anchor="middle">${a}</text>`;
+      svg += `<path id="p${a[0]}${a[2]}" d="${a[3]}" stroke="#475569" stroke-width="1.7" fill="none" marker-end="url(#m0)"/>
+              <text x="${a[4]}" y="${a[5]}" fill="#94a3b8" font-size="9" font-weight="600" text-anchor="middle">${a[2]}</text>`;
     });
     for (let i = 1; i <= 11; i++) {
       svg += `<g transform="translate(${S[i].x},${S[i].y})">
@@ -146,9 +146,9 @@
     document.getElementById("ban").className = cur === 11 ? "banner err" : "banner";
     document.getElementById("stT").textContent = S[cur].n;
     document.getElementById("evBox").innerHTML = E.map(e => {
-      const nxt = T[cur][e];
-      return `<button class="ev ${nxt?'ok':'no'}" onclick="go('${e}')">
-        <span><b>${e}:</b> ${e}</span><span class="tag">${nxt?'→('+nxt+')':'—'}</span>
+      const nxt = T[cur][e[0]];
+      return `<button class="ev ${nxt?'ok':'no'}" onclick="go('${e[0]}')">
+        <span><b>${e[0]}:</b> ${e[1]}</span><span class="tag">${nxt?'→('+nxt+')':'—'}</span>
       </button>`;
     }).join("");
   
@@ -202,8 +202,8 @@
   function runCP(n) {
     reset();
     const seq = n === 1
-      ? ["E1","E2","E4","E5","E7","E8","E9","E12","E13"] // Éxito completo con login
-      : ["E1","E2","E4","E5","E8","E9","E11","E14"];     // Pago rechazado -> Error -> Inicio
+      ? ["E1","E2","E4","E5","E7","E8","E9","E12","E13"]
+      : ["E1","E2","E4","E5","E8","E9","E11","E14"];
     let k = 0;
     timer = setInterval(() => {
       if (k >= seq.length) { clearInterval(timer); document.getElementById("msg").innerHTML = `🏁 <b>CP-0${n} finalizado</b> en ${S[cur].n}.`; return; }
