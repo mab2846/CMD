@@ -68,7 +68,7 @@
     <div class="svg-box"><svg id="svg" viewBox="0 0 880 390"></svg></div>
   </div>
   <div class="card">
-    <h2>3. Tabla Matricial (11 Estados × 14 Eventos)</h2>
+    <h2>3. Transición de Estados </h2>
     <div class="tbl-wrap"><table id="tbl"></table></div>
     <h2>Historial</h2>
     <div id="log" class="log"></div>
@@ -76,49 +76,69 @@
 </div>
 <script>
   const S = {
-    1: { n: "(1) Pantalla inicio", l1: "(1) Pantalla", l2: "de inicio", x: 55, y: 195 },
-    2: { n: "(2) Buscando cursos", l1: "(2) Buscando", l2: "cursos", x: 170, y: 195 },
-    3: { n: "(3) Visualizando curso", l1: "(3) Visualiz.", l2: "curso", x: 285, y: 195 },
-    4: { n: "(4) Agregado carrito", l1: "(4) Agregado", l2: "al carrito", x: 400, y: 195 },
-    5: { n: "(5) Verificando carrito", l1: "(5) Verific.", l2: "carrito", x: 515, y: 195 },
-    6: { n: "(6) Login autentif.", l1: "(6) Login", l2: "autentif.", x: 605, y: 115 },
-    7: { n: "(7) Datos de pago", l1: "(7) Datos", l2: "de pago", x: 695, y: 195 },
-    8: { n: "(8) Procesando pago", l1: "(8) Proces.", l2: "pago", x: 815, y: 195 },
-    9: { n: "(9) Registrando compra", l1: "(9) Registr.", l2: "compra", x: 815, y: 335 },
-    10:{ n: "(10) Finalizado éxito", l1: "(10) Finaliz.", l2: "éxito", x: 695, y: 335 },
-    11:{ n: "(11) Finalizado error", l1: "(11) Finaliz.", l2: "error", x: 445, y: 60 }
+    1: { n: "(1) Pantalla inicio", l1: "(1) Pantalla", l2: "de inicio", x: 55, y: 205 },
+    2: { n: "(2) Buscando cursos", l1: "(2) Buscando", l2: "cursos", x: 170, y: 205 },
+    3: { n: "(3) Visualizando curso", l1: "(3) Visualiz.", l2: "curso", x: 285, y: 205 },
+    4: { n: "(4) Agregado carrito", l1: "(4) Agregado", l2: "al carrito", x: 400, y: 205 },
+    5: { n: "(5) Verificando carrito", l1: "(5) Verific.", l2: "carrito", x: 515, y: 205 },
+    6: { n: "(6) Login autentif.", l1: "(6) Login", l2: "autentif.", x: 615, y: 125 },
+    7: { n: "(7) Datos de pago", l1: "(7) Datos", l2: "de pago", x: 705, y: 205 },
+    8: { n: "(8) Procesando pago", l1: "(8) Proces.", l2: "pago", x: 820, y: 205 },
+    9: { n: "(9) Registrando compra", l1: "(9) Registr.", l2: "compra", x: 820, y: 340 },
+    10:{ n: "(10) Finalizado éxito", l1: "(10) Finaliz.", l2: "éxito", x: 705, y: 340 },
+    11:{ n: "(11) Finalizado error", l1: "(11) Finaliz.", l2: "error", x: 445, y: 65 }
   };
+  
   const E = [
-    ["E1","Ingresar curso"],["E2","Seleccionar curso"],["E3","Curso no encont."],
-    ["E4","Agregar carrito"],["E5","Revisar carrito"],["E6","Carrito vacío"],
-    ["E7","Logearse"],["E8","Proceder pago"],["E9","Confirmar pago"],
-    ["E10","Datos inválidos"],["E11","Pago rechazado"],["E12","Pago aprobado"],
-    ["E13","Finalizar oper."],["E14","Regresar inicio"]
+    { id: "E1", label: "Ingresar curso" },
+    { id: "E2", label: "Seleccionar curso" },
+    { id: "E3", label: "Curso no encont." },
+    { id: "E4", label: "Agregar carrito" },
+    { id: "E5", label: "Revisar carrito" },
+    { id: "E6", label: "Carrito vacío" },
+    { id: "E7", label: "Logearse" },
+    { id: "E8", label: "Proceder pago" },
+    { id: "E9", label: "Confirmar pago" },
+    { id: "E10", label: "Pago rechazado" },
+    { id: "E11", label: "Pago aprobado" },
+    { id: "E12", label: "Finalizar oper." },
+    { id: "E13", label: "Regresar inicio" },
+    { id: "E14", label: "Error de login" }
   ];
+  
   const T = {
     1:{E1:2}, 2:{E2:3,E3:11}, 3:{E4:4}, 4:{E5:5},
-    5:{E6:11,E7:6,E8:7}, 6:{E8:7}, 7:{E9:8},
-    8:{E10:1,E11:11,E12:9}, 9:{E13:10}, 10:{E14:1}, 11:{E14:1}
+    5:{E6:11,E7:6,E8:7}, 6:{E8:7,E14:11}, 7:{E9:8},
+    8:{E10:11,E11:9}, 9:{E12:10}, 10:{E13:1}, 11:{E13:1}
   };
+  
   const ARCS = [
-    [1,2,"E1","M91 195 L132 195",112,188],[2,3,"E2","M206 195 L247 195",227,188],
-    [2,11,"E3","M190 165 L408 72",285,112],[3,4,"E4","M321 195 L362 195",342,188],
-    [4,5,"E5","M436 195 L477 195",457,188],[5,11,"E6","M498 162 L462 94",496,130],
-    [5,6,"E7","M542 168 L578 138",545,146],[5,7,"E8","M551 195 L657 195",605,208],
-    [6,7,"E8","M632 140 L668 170",665,148],[7,8,"E9","M731 195 L777 195",755,188],
-    [8,1,"E10","M815 159 L815 20 L55 20 L55 157",440,14],
-    [8,11,"E11","M785 170 L482 68",665,98],[8,9,"E12","M815 231 L815 297",842,266],
-    [9,10,"E13","M779 335 L733 335",756,328],[10,1,"E14","M659 335 L55 335 L55 233",350,328],
-    [11,1,"E14","M409 60 L75 60 L75 158",220,53]
+    { from:1, to:2, ev:"E1", d:"M91 205 L132 205", tx:112, ty:197 },
+    { from:2, to:3, ev:"E2", d:"M206 205 L247 205", tx:227, ty:197 },
+    { from:2, to:11, ev:"E3", d:"M190 175 L408 78", tx:285, ty:118 },
+    { from:3, to:4, ev:"E4", d:"M321 205 L362 205", tx:342, ty:197 },
+    { from:4, to:5, ev:"E5", d:"M436 205 L477 205", tx:457, ty:197 },
+    { from:5, to:11, ev:"E6", d:"M498 172 L462 100", tx:498, ty:136 },
+    { from:5, to:6, ev:"E7", d:"M544 180 L586 146", tx:550, ty:154 },
+    { from:5, to:7, ev:"E8", d:"M551 205 L667 205", tx:610, ty:218 },
+    { from:6, to:7, ev:"E8", d:"M644 148 L678 178", tx:675, ty:155 },
+    { from:6, to:11, ev:"E14", d:"M582 113 L482 77", tx:538, ty:86 },
+    { from:7, to:8, ev:"E9", d:"M741 205 L782 205", tx:762, ty:197 },
+    { from:8, to:11, ev:"E10", d:"M820 169 L820 35 L482 58", tx:655, ty:28 },
+    { from:8, to:9, ev:"E11", d:"M820 241 L820 302", tx:845, ty:272 },
+    { from:9, to:10, ev:"E12", d:"M784 340 L743 340", tx:764, ty:332 },
+    { from:10, to:1, ev:"E13", d:"M669 340 L55 340 L55 243", tx:350, ty:332 },
+    { from:11, to:1, ev:"E13", d:"M409 65 L55 65 L55 167", tx:220, ty:57 }
   ];
+  
   let cur = 1, timer = null;
   
   function init() {
-    let th = "<tr><th>Est\\Ev</th>" + E.map(e => `<th>${e[0]}</th>`).join("") + "</tr>";
+    let th = "<tr><th>Est\\Ev</th>" + E.map(e => `<th>${e.id}</th>`).join("") + "</tr>";
     let tb = "";
     for (let i = 1; i <= 11; i++) {
       tb += `<tr id="r${i}"><td class="sc">${S[i].n}</td>` +
-        E.map(e => `<td id="c${i}${e[0]}">${T[i][e[0]] || ""}</td>`).join("") + "</tr>";
+        E.map(e => `<td id="c${i}${e.id}">${T[i][e.id] || ""}</td>`).join("") + "</tr>";
     }
     document.getElementById("tbl").innerHTML = th + tb;
   
@@ -128,8 +148,8 @@
       <marker id="m2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 1 L10 5 L0 9z" fill="#ef4444"/></marker>
     </defs>`;
     ARCS.forEach(a => {
-      svg += `<path id="p${a[0]}${a[2]}" d="${a[3]}" stroke="#475569" stroke-width="1.7" fill="none" marker-end="url(#m0)"/>
-              <text x="${a[4]}" y="${a[5]}" fill="#94a3b8" font-size="9" font-weight="600" text-anchor="middle">${a[2]}</text>`;
+      svg += `<path id="p${a.from}${a.ev}" d="${a.d}" stroke="#475569" stroke-width="1.8" fill="none" marker-end="url(#m0)"/>
+              <text x="${a.tx}" y="${a.ty}" fill="#94a3b8" font-size="9.5" font-weight="600" text-anchor="middle">${a.ev}</text>`;
     });
     for (let i = 1; i <= 11; i++) {
       svg += `<g transform="translate(${S[i].x},${S[i].y})">
@@ -146,9 +166,9 @@
     document.getElementById("ban").className = cur === 11 ? "banner err" : "banner";
     document.getElementById("stT").textContent = S[cur].n;
     document.getElementById("evBox").innerHTML = E.map(e => {
-      const nxt = T[cur][e[0]];
-      return `<button class="ev ${nxt?'ok':'no'}" onclick="go('${e[0]}')">
-        <span><b>${e[0]}:</b> ${e[1]}</span><span class="tag">${nxt?'→('+nxt+')':'—'}</span>
+      const nxt = T[cur][e.id];
+      return `<button class="ev ${nxt?'ok':'no'}" onclick="go('${e.id}')">
+        <span><b>${e.id}:</b> ${e.label}</span><span class="tag">${nxt?'→('+nxt+')':'—'}</span>
       </button>`;
     }).join("");
   
@@ -161,7 +181,7 @@
       document.getElementById("t2_" + i).setAttribute("fill", act && i !== 11 ? "#052e16" : "#cbd5e1");
       document.getElementById("r" + i).className = act ? "act" : "";
     }
-    document.querySelectorAll("path[id^='p']").forEach(p => { p.setAttribute("stroke", "#475569"); p.setAttribute("stroke-width", "1.7"); p.setAttribute("marker-end", "url(#m0)"); });
+    document.querySelectorAll("path[id^='p']").forEach(p => { p.setAttribute("stroke", "#475569"); p.setAttribute("stroke-width", "1.8"); p.setAttribute("marker-end", "url(#m0)"); });
     document.querySelectorAll("td").forEach(td => td.classList.remove("hit", "ehit"));
   
     if (from && ev) {
@@ -202,8 +222,8 @@
   function runCP(n) {
     reset();
     const seq = n === 1
-      ? ["E1","E2","E4","E5","E7","E8","E9","E12","E13"]
-      : ["E1","E2","E4","E5","E8","E9","E11","E14"];
+      ? ["E1","E2","E4","E5","E7","E8","E9","E11","E12"]
+      : ["E1","E2","E4","E5","E8","E9","E10","E13"];
     let k = 0;
     timer = setInterval(() => {
       if (k >= seq.length) { clearInterval(timer); document.getElementById("msg").innerHTML = `🏁 <b>CP-0${n} finalizado</b> en ${S[cur].n}.`; return; }
@@ -214,4 +234,5 @@
   </script>
   </body>
   </html>
+  
   
